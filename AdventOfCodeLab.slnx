@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Aoc.Abstractions/Aoc.Abstractions.csproj" />
+    <Project Path="src/Aoc.Cli/Aoc.Cli.csproj" />
+  </Folder>
+</Solution>
