@@ -427,3 +427,6 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Personal Advent of Code inputs stay local.
+inputs/local/
