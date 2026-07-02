@@ -6,12 +6,13 @@
 public enum PuzzleInputKind
 {
     /// <summary>
-    /// Uses the personal puzzle input assigned to the Advent of Code account.
+    /// Uses a small custom demo input committed to the repository.
+    /// This option allows anyone to clone and run the application immediately.
     /// </summary>
-    Personal,
+    Demo = 1,
 
     /// <summary>
-    /// Uses a sample input taken from the puzzle description.
+    /// Uses a personal Advent of Code input stored locally and excluded from Git.
     /// </summary>
-    Sample
+    Personal = 2
 }
