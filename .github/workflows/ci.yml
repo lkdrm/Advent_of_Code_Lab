@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Restore dependencies
+        run: dotnet restore AdventOfCodeLab.slnx
+
+      - name: Build solution
+        run: dotnet build AdventOfCodeLab.slnx --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test AdventOfCodeLab.slnx --configuration Release --no-build --verbosity normal
