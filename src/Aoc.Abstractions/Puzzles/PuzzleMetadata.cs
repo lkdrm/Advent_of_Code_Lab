@@ -34,7 +34,7 @@ public class PuzzleMetadata
     /// <exception cref="ArgumentException">
     /// Thrown when <paramref name="title"/> is empty or contains only whitespace.
     /// </exception>
-    public PuzzleMetadata(PuzzleId id, string title, string? description)
+    public PuzzleMetadata(PuzzleId id, string title, string? description = default)
     {
         if (string.IsNullOrEmpty(title))
         {

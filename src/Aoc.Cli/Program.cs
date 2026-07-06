@@ -1,5 +1,7 @@
 ﻿using Aoc.Abstractions.Inputs;
 using Aoc.Abstractions.Puzzles;
+using Aoc.Application;
+using Aoc.Application.Execution;
 using Aoc.Infrastructure.Inputs;
 using Aoc.Year2015;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,28 +20,38 @@ var inputsRootPath = Path.Combine(rootRepositoryPath, "Inputs");
 var services = new ServiceCollection();
 services.AddSingleton<IPuzzleInputProvider>(_ => new FilePuzzleInputProvider(inputsRootPath));
 services.AddYear2015Puzzles();
+services.AddApplication();
 
 using var serviceProvider = services.BuildServiceProvider();
 
-var puzzles = serviceProvider.GetRequiredService<IEnumerable<IPuzzle>>()
-    .OrderBy(puzzle => puzzle.Metadata.Id.Year)
-    .ThenBy(puzzle => puzzle.Metadata.Id.Day);
+var executionService = serviceProvider.GetRequiredService<IPuzzleExecutionService>();
 
+var result = await executionService.ExecuteAsync(
+    id: new PuzzleId(year: 2015, day: 1),
+    puzzlePart: PuzzlePart.Both,
+    inputKind: PuzzleInputKind.Demo,
+    cancellationToken: cts.Token);
 
-var selectedPuzzleId = new PuzzleId(2015, 1);
-
-var selectedPuzzle = serviceProvider
-    .GetServices<IPuzzle>()
-    .Single(puzzle => puzzle.Metadata.Id == selectedPuzzleId);
-
-var inputProvider = serviceProvider.GetRequiredService<IPuzzleInputProvider>();
-
-var input = inputProvider.GetInputAsync(selectedPuzzleId, PuzzleInputKind.Demo, cts.Token);
-
-var partOneAnswer = selectedPuzzle.SolvePartOne(await input);
-var partTwoAnswer = selectedPuzzle.SolvePartTwo(await input);
-
-Console.WriteLine($"{selectedPuzzle.Metadata.Id} — {selectedPuzzle.Metadata.Title}");
+Console.WriteLine($"{result.PuzzleMetadata.Id} - {result.PuzzleMetadata.Title}");
 Console.WriteLine(new string('-', 45));
-Console.WriteLine($"Part One: {partOneAnswer}");
-Console.WriteLine($"Part Two: {partTwoAnswer}");
+
+foreach (var partResult in result.PartResults)
+{
+    Console.WriteLine(
+        $"{GetPartDisplayName(partResult.PuzzlePart)}: {partResult.Answer}");
+
+    Console.WriteLine(
+        $"Execution time: {partResult.Duration.TotalMilliseconds:F3} ms");
+}
+
+/// <summary>
+/// Converts a concrete puzzle part into a readable CLI label.
+/// </summary>
+static string GetPartDisplayName(PuzzlePart puzzlePart) =>
+    puzzlePart switch
+    {
+        PuzzlePart.PartOne => "Part One",
+        PuzzlePart.PartTwo => "Part Two",
+    };
+
+Console.ReadLine();
