@@ -14,5 +14,10 @@ public static class DependencyInjection
     /// </summary>
     /// <param name="services">The dependency-injection service collection.</param>
     /// <returns>The same service collection so registrations can be chained.</returns>
-    public static IServiceCollection AddYear2015Puzzles(this IServiceCollection services) => services.AddSingleton<IPuzzle, Day01>();
+    public static IServiceCollection AddYear2015Puzzles(this IServiceCollection services)
+    {
+        services.AddSingleton<IPuzzle, Day01>();
+        services.AddSingleton<IPuzzle, Day02>();
+        return services;
+    }
 }
