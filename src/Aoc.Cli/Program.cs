@@ -27,7 +27,7 @@ using var serviceProvider = services.BuildServiceProvider();
 var executionService = serviceProvider.GetRequiredService<IPuzzleExecutionService>();
 
 var result = await executionService.ExecuteAsync(
-    id: new PuzzleId(year: 2015, day: 1),
+    id: new PuzzleId(year: 2015, day: 2),
     puzzlePart: PuzzlePart.Both,
     inputKind: PuzzleInputKind.Demo,
     cancellationToken: cts.Token);
