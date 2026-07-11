@@ -1,6 +1,6 @@
 using Aoc.Year2015.Puzzles;
 
-namespace Aoc.Year2015.Tests.Puzzles;
+namespace Aoc.Year2015.Tests;
 
 /// <summary>
 /// Contains automated checks for Advent of Code 2015, Day 02.
@@ -17,9 +17,7 @@ public sealed class Day02Tests
     [Theory]
     [InlineData("2x3x4", "58")]
     [InlineData("1x1x10", "43")]
-    public void SolvePartOne_WhenInputContainsOnePresent_ReturnsRequiredWrappingPaper(
-        string input,
-        string expectedAnswer)
+    public void SolvePartOne_WhenInputContainsOnePresent_ReturnsRequiredWrappingPaper(string input, string expectedAnswer)
     {
         // Act.
         var result = _puzzle.SolvePartOne(input);
@@ -52,9 +50,7 @@ public sealed class Day02Tests
     [Theory]
     [InlineData("2x3x4", "34")]
     [InlineData("1x1x10", "14")]
-    public void SolvePartTwo_WhenInputContainsOnePresent_ReturnsRequiredRibbon(
-        string input,
-        string expectedAnswer)
+    public void SolvePartTwo_WhenInputContainsOnePresent_ReturnsRequiredRibbon(string input, string expectedAnswer)
     {
         // Act.
         var result = _puzzle.SolvePartTwo(input);

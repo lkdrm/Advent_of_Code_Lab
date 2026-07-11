@@ -11,11 +11,9 @@ namespace Aoc.Year2015.Puzzles;
 /// </remarks>
 public class Day01 : IPuzzle
 {
-    /// <summary>
-    /// Gets the metadata displayed by the CLI and used to identify this puzzle.
-    /// </summary>
+    /// <inheritdoc />
     public PuzzleMetadata Metadata { get; } = new(
-        id: new PuzzleId(2015, 1),
+        id: new(2015, 1),
         title: "Not Quite Lisp",
         description: "Tracks Santa's floor while processing parentheses.");
 

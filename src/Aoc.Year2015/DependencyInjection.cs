@@ -18,6 +18,7 @@ public static class DependencyInjection
     {
         services.AddSingleton<IPuzzle, Day01>();
         services.AddSingleton<IPuzzle, Day02>();
+        services.AddSingleton<IPuzzle, Day03>();
         return services;
     }
 }
