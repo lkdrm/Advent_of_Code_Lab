@@ -344,20 +344,32 @@ Current areas of focus include:
 
 ## Roadmap
 
-- [x] Shared puzzle abstractions
-- [x] File-based input loading
-- [x] Application execution service
-- [x] Dependency injection
-- [x] Interactive Spectre.Console CLI
-- [x] Demo and personal input selection
-- [x] Part One, Part Two, and Both execution
-- [x] Unit tests across application layers
-- [x] GitHub Actions CI
-- [x] Protected `main` branch
-- [x] Contribution rules and PR checklist
-- [ ] Continue implementing Advent of Code 2015
-- [ ] Add more Advent of Code years
-- [ ] Expand code coverage reporting
+![Advent of Code 2015 progress](https://img.shields.io/badge/Advent%20of%20Code%202015-3%20%2F%2025-2ea44f)
+
+| Status | Milestone | Details |
+| :---: | --- | --- |
+| ✅ | Core architecture | Puzzle abstractions, application service, DI, and async input loading |
+| ✅ | Interactive CLI | Spectre.Console menu, input selection, puzzle parts, and timing |
+| ✅ | Testing | Puzzle, application, and infrastructure tests with xUnit |
+| ✅ | Continuous integration | GitHub Actions restore, build, and test pipeline |
+| ✅ | Protected workflow | Required pull requests, CI checks, and protected `main` |
+| ✅ | Documentation standards | XML comments, guides, contribution rules, and PR checklist |
+| 🚧 | Advent of Code 2015 | `3 / 25` puzzle days completed |
+| 📋 | Additional years | Add support for more Advent of Code events |
+| 📋 | Code coverage | Generate and publish coverage reports |
+
+### Current focus
+
+Continue implementing Advent of Code 2015 one puzzle at a time. Every completed day must include:
+
+- Part One and Part Two;
+- unit tests;
+- demo input;
+- dependency-injection registration;
+- XML documentation comments;
+- a detailed Markdown guide;
+- successful CLI execution;
+- a green CI run.
 
 ## Acknowledgements
 
