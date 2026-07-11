@@ -10,6 +10,7 @@
     <Project Path="src/Aoc.Year2015/Aoc.Year2015.csproj" Id="2322f399-f04b-468a-8be1-2414e54cb66f" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/Aoc.Abstractions.Tests/Aoc.Abstractions.Tests.csproj" />
     <Project Path="tests/Aoc.Application.Tests/Aoc.Application.Tests.csproj" />
     <Project Path="tests/Aoc.Infrastructure.Tests/Aoc.Infrastructure.Tests.csproj" />
     <Project Path="tests/Aoc.Year2015.Tests/Aoc.Year2015.Tests.csproj" />

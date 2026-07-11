@@ -31,14 +31,12 @@ public class PuzzleMetadata
     /// <param name="title">The official or descriptive title of the puzzle.</param>
     /// <param name="description">An optional short explanation of the puzzle.</param>
     /// <exception cref="ArgumentException">
-    /// Thrown when <paramref name="title"/> is empty or contains only whitespace.
+    /// Thrown when <paramref name="title"/> is empty
+    /// or contains only whitespace.
     /// </exception>
     public PuzzleMetadata(PuzzleId id, string title, string? description = default)
     {
-        if (string.IsNullOrEmpty(title))
-        {
-            throw new ArgumentNullException(nameof(title), "Puzzle title is empty!");
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(title);
 
         Id = id;
         Title = title;
