@@ -23,7 +23,7 @@ public sealed class Day01Tests
     [InlineData("))(", "-1")]
     [InlineData(")))", "-3")]
     [InlineData(")())())", "-3")]
-    public void SolvePartOne_ReturnsExpectedFinalFloor(string input, string expectedFloor)
+    public void SolvePartOneReturnsExpectedFinalFloor(string input, string expectedFloor)
     {
         // Arrange: create the puzzle implementation we want to test.
         var puzzle = new Day01();
@@ -46,7 +46,7 @@ public sealed class Day01Tests
     [Theory]
     [InlineData(")", "1")]
     [InlineData("()())", "5")]
-    public void SolvePartTwo_ReturnsFirstBasementPosition(string input, string expectedPosition)
+    public void SolvePartTwoReturnsFirstBasementPosition(string input, string expectedPosition)
     {
         // Arrange.
         var puzzle = new Day01();

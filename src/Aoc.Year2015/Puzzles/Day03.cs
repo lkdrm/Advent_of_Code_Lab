@@ -10,7 +10,7 @@ namespace Aoc.Year2015.Puzzles;
 /// The puzzle input contains directions that move Santa or Robo-Santa
 /// across a two-dimensional grid of houses.
 /// </remarks>
-public class Day03 : IPuzzle
+public sealed class Day03 : IPuzzle
 {
     /// <inheritdoc />
     public PuzzleMetadata Metadata { get; } = new(
@@ -55,10 +55,10 @@ public class Day03 : IPuzzle
     /// </returns>
     public string SolvePartTwo(string input)
     {
-        var santaMovePosition = (X: 0, Y: 0);
-        var roboSantaMovePosition = (X: 0, Y: 0);
+        var santaPosition = (X: 0, Y: 0);
+        var roboSantaPosition = (X: 0, Y: 0);
 
-        var visitedHouses = new HashSet<(int X, int Y)> { santaMovePosition };
+        var visitedHouses = new HashSet<(int X, int Y)> { santaPosition };
 
         var directions = input.Trim();
 
@@ -68,13 +68,13 @@ public class Day03 : IPuzzle
 
             if (i % 2 == 0)
             {
-                santaMovePosition = Move(santaMovePosition, direction);
-                visitedHouses.Add(santaMovePosition);
+                santaPosition = Move(santaPosition, direction);
+                visitedHouses.Add(santaPosition);
             }
             else
             {
-                roboSantaMovePosition = Move(roboSantaMovePosition, direction);
-                visitedHouses.Add(roboSantaMovePosition);
+                roboSantaPosition = Move(roboSantaPosition, direction);
+                visitedHouses.Add(roboSantaPosition);
             }
         }
 

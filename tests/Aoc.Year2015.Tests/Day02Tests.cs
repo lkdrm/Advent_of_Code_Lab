@@ -17,7 +17,7 @@ public sealed class Day02Tests
     [Theory]
     [InlineData("2x3x4", "58")]
     [InlineData("1x1x10", "43")]
-    public void SolvePartOne_WhenInputContainsOnePresent_ReturnsRequiredWrappingPaper(string input, string expectedAnswer)
+    public void SolvePartOneWhenInputContainsOnePresentReturnsRequiredWrappingPaper(string input, string expectedAnswer)
     {
         // Act.
         var result = _puzzle.SolvePartOne(input);
@@ -30,7 +30,7 @@ public sealed class Day02Tests
     /// Verifies that Part One sums wrapping-paper requirements for multiple presents.
     /// </summary>
     [Fact]
-    public void SolvePartOne_WhenInputContainsMultiplePresents_ReturnsTotalWrappingPaper()
+    public void SolvePartOneWhenInputContainsMultiplePresentsReturnsTotalWrappingPaper()
     {
         // Arrange.
         const string input = "2x3x4\r\n1x1x10\r\n";
@@ -50,7 +50,7 @@ public sealed class Day02Tests
     [Theory]
     [InlineData("2x3x4", "34")]
     [InlineData("1x1x10", "14")]
-    public void SolvePartTwo_WhenInputContainsOnePresent_ReturnsRequiredRibbon(string input, string expectedAnswer)
+    public void SolvePartTwoWhenInputContainsOnePresentReturnsRequiredRibbon(string input, string expectedAnswer)
     {
         // Act.
         var result = _puzzle.SolvePartTwo(input);
@@ -63,7 +63,7 @@ public sealed class Day02Tests
     /// Verifies that Part Two sums ribbon requirements for multiple presents.
     /// </summary>
     [Fact]
-    public void SolvePartTwo_WhenInputContainsMultiplePresents_ReturnsTotalRibbon()
+    public void SolvePartTwoWhenInputContainsMultiplePresentsReturnsTotalRibbon()
     {
         // Arrange.
         const string input = "2x3x4\r\n1x1x10\r\n";

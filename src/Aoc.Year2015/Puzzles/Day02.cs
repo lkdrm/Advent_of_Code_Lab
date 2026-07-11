@@ -9,7 +9,7 @@ namespace Aoc.Year2015.Puzzles;
 /// Each input line represents one present in
 /// <c>length x width x height</c> format.
 /// </remarks>
-public class Day02 : IPuzzle
+public sealed class Day02 : IPuzzle
 {
     /// <inheritdoc />
     public PuzzleMetadata Metadata { get; } = new(

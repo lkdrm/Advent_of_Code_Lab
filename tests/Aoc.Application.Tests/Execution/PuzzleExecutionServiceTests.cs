@@ -15,7 +15,7 @@ public sealed class PuzzleExecutionServiceTests
     /// and returns one result with the expected answer.
     /// </summary>
     [Fact]
-    public async Task ExecuteAsync_WhenPartOneIsSelected_ExecutesOnlyPartOne()
+    public async Task ExecuteAsyncWhenPartOneIsSelectedExecutesOnlyPartOne()
     {
         // Arrange.
         var puzzleId = new PuzzleId(year: 2015, day: 1);
@@ -67,7 +67,7 @@ public sealed class PuzzleExecutionServiceTests
     /// and returns one result with the expected answer.
     /// </summary>
     [Fact]
-    public async Task ExecuteAsync_WhenPartTwoIsSelected_ExecutesOnlyPartTwo()
+    public async Task ExecuteAsyncWhenPartTwoIsSelectedExecutesOnlyPartTwo()
     {
         // Arrange.
         var puzzleId = new PuzzleId(year: 2015, day: 1);
@@ -118,7 +118,7 @@ public sealed class PuzzleExecutionServiceTests
     /// while loading the input only once.
     /// </summary>
     [Fact]
-    public async Task ExecuteAsync_WhenBothPartsAreSelected_ExecutesBothPartsAndLoadsInputOnce()
+    public async Task ExecuteAsyncWhenBothPartsAreSelectedExecutesBothPartsAndLoadsInputOnce()
     {
         // Arrange.
         var puzzleId = new PuzzleId(year: 2015, day: 1);
@@ -176,7 +176,7 @@ public sealed class PuzzleExecutionServiceTests
     /// without attempting to load an input file.
     /// </summary>
     [Fact]
-    public async Task ExecuteAsync_WhenPuzzleIsNotRegistered_ThrowsKeyNotFoundException()
+    public async Task ExecuteAsyncWhenPuzzleIsNotRegisteredThrowsKeyNotFoundException()
     {
         // Arrange.
         var registeredPuzzleId = new PuzzleId(year: 2015, day: 1);

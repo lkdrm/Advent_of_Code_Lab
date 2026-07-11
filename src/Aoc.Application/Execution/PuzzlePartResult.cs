@@ -31,8 +31,8 @@ public sealed record PuzzlePartResult
     /// Initializes a new instance of the <see cref="PuzzlePartResult"/> class.
     /// </summary>
     /// <param name="puzzlePart">
-    /// The puzzle part that was executed. Only <see cref="PuzzlePart.One"/>
-    /// and <see cref="PuzzlePart.Two"/> are valid here.
+    /// The puzzle part that was executed. Only <see cref="PuzzlePart.PartOne"/>
+    /// and <see cref="PuzzlePart.PartTwo"/> are valid here.
     /// </param>
     /// <param name="answer">The calculated answer formatted for display.</param>
     /// <param name="duration">The time required to execute the puzzle part.</param>

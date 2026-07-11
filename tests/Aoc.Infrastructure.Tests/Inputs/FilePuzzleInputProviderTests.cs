@@ -28,7 +28,7 @@ public sealed class FilePuzzleInputProviderTests : IDisposable
     /// Verifies that a committed demo input can be read asynchronously.
     /// </summary>
     [Fact]
-    public async Task GetInputAsync_WhenDemoInputExists_ReturnsFileContent()
+    public async Task GetInputAsyncWhenDemoInputExistsReturnsFileContent()
     {
         // Arrange.
         var puzzleId = new PuzzleId(year: 2015, day: 1);
@@ -56,7 +56,7 @@ public sealed class FilePuzzleInputProviderTests : IDisposable
     /// Verifies that a local personal input can be read asynchronously.
     /// </summary>
     [Fact]
-    public async Task GetInputAsync_WhenPersonalInputExists_ReturnsFileContent()
+    public async Task GetInputAsyncWhenPersonalInputExistsReturnsFileContent()
     {
         // Arrange.
         var puzzleId = new PuzzleId(year: 2015, day: 1);
@@ -84,7 +84,7 @@ public sealed class FilePuzzleInputProviderTests : IDisposable
     /// Verifies that a useful exception is thrown when the requested input file is missing.
     /// </summary>
     [Fact]
-    public async Task GetInputAsync_WhenInputFileDoesNotExist_ThrowsFileNotFoundException()
+    public async Task GetInputAsyncWhenInputFileDoesNotExistThrowsFileNotFoundException()
     {
         // Arrange.
         var provider = new FilePuzzleInputProvider(_inputsRootPath);

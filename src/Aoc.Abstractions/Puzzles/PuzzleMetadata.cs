@@ -27,7 +27,6 @@ public class PuzzleMetadata
     /// <summary>
     /// Initializes a new instance of the <see cref="PuzzleMetadata"/> class.
     /// </summary>
-    /// <para
     /// <param name="id">The unique year and day identifier of the puzzle.</param>
     /// <param name="title">The official or descriptive title of the puzzle.</param>
     /// <param name="description">An optional short explanation of the puzzle.</param>
