@@ -138,7 +138,8 @@ flowchart TD
 | `Aoc.Infrastructure` | File-based loading of demo and personal inputs |
 | `Aoc.Year2015` | Advent of Code 2015 puzzle implementations and DI registration |
 | `Aoc.Cli` | Application startup, interactive menu, and result presentation |
-| `Aoc.Application.Tests` | Tests for puzzle execution behavior |
+| `Aoc.Abstractions.Tests` | Tests for identifiers, metadata, and shared contracts |
+| `Aoc.Application.Tests` | Tests for puzzle execution behavior and result models |
 | `Aoc.Infrastructure.Tests` | Tests for file-based input loading |
 | `Aoc.Year2015.Tests` | Tests for individual puzzle algorithms |
 
@@ -195,6 +196,7 @@ Advent_of_Code_Lab/
 │   └── Aoc.Year2015/
 │
 ├── tests/
+│   ├── Aoc.Abstractions.Tests/
 │   ├── Aoc.Application.Tests/
 │   ├── Aoc.Infrastructure.Tests/
 │   └── Aoc.Year2015.Tests/
@@ -254,17 +256,20 @@ Run tests for one puzzle day:
 dotnet test --filter "FullyQualifiedName~Day03Tests"
 ```
 
-The test suite covers three different areas:
+The test suite covers different areas:
 
 ```text
-Aoc.Year2015.Tests
-→ verifies puzzle algorithms
+Aoc.Abstractions.Tests
+→ verifies identifiers, metadata, and shared contract invariants
 
 Aoc.Application.Tests
-→ verifies puzzle execution and selection
+→ verifies puzzle execution, result models, and orchestration behavior
 
 Aoc.Infrastructure.Tests
 → verifies asynchronous file input loading
+
+Aoc.Year2015.Tests
+→ verifies individual puzzle algorithms
 ```
 
 ## Continuous integration

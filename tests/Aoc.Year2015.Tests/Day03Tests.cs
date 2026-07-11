@@ -1,6 +1,6 @@
 ﻿using Aoc.Year2015.Puzzles;
 
-namespace Aoc.Year2015.Tests.Puzzles;
+namespace Aoc.Year2015.Tests;
 
 /// <summary>
 /// Contains automated checks for Advent of Code 2015, Day 03.
