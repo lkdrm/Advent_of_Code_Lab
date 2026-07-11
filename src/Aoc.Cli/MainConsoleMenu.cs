@@ -50,7 +50,7 @@ public static class MainConsoleMenu
                 .Title("[yellow]Choose a puzzle[/]")
                 .PageSize(10)
                 .MoreChoicesText("[blue](Move up and down to reveal more puzzles)[/]")
-                .UseConverter(puzzles => $"{puzzles.Metadata.Id} - {puzzles.Metadata.Title}")
+                .UseConverter(puzzles => Markup.Escape($"{puzzles.Metadata.Id} - {puzzles.Metadata.Title}"))
                 .AddChoices(availablePuzzles));
 
             var selectedInputKind = AnsiConsole.Prompt(
@@ -92,7 +92,7 @@ public static class MainConsoleMenu
     {
         AnsiConsole.WriteLine();
 
-        AnsiConsole.Write(new Rule($"{results.PuzzleMetadata.Id} - {results.PuzzleMetadata.Title}").RuleStyle("blue"));
+        AnsiConsole.Write(new Rule(Markup.Escape($"{results.PuzzleMetadata.Id} - {results.PuzzleMetadata.Title}")).RuleStyle("blue"));
 
         var table = new Table()
             .Border(TableBorder.Rounded)
@@ -102,7 +102,10 @@ public static class MainConsoleMenu
 
         foreach (var result in results.PartResults)
         {
-            table.AddRow(ConsoleMenu.GetPartDisplayName(result.PuzzlePart), result.Answer.ToString(), $"{result.Duration.TotalMilliseconds:F3} ms");
+            table.AddRow(
+                Markup.Escape(ConsoleMenu.GetPartDisplayName(result.PuzzlePart)),
+                Markup.Escape(result.Answer),
+                Markup.Escape($"{result.Duration.TotalMilliseconds:F3} ms"));
         }
 
         AnsiConsole.Write(table);

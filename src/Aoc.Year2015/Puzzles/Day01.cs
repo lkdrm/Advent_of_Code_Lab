@@ -9,7 +9,7 @@ namespace Aoc.Year2015.Puzzles;
 /// The puzzle input contains opening and closing parentheses.
 /// Each character changes Santa's current floor.
 /// </remarks>
-public class Day01 : IPuzzle
+public sealed class Day01 : IPuzzle
 {
     /// <inheritdoc />
     public PuzzleMetadata Metadata { get; } = new(
@@ -28,7 +28,7 @@ public class Day01 : IPuzzle
 
         foreach (var item in input)
         {
-            floor += GetFloor(item);
+            floor += GetFloorChange(item);
         }
 
         return floor.ToString();
@@ -43,9 +43,9 @@ public class Day01 : IPuzzle
     {
         var floor = 0;
 
-        for (int index = 0; index < input.Length; index++)
+        for (var index = 0; index < input.Length; index++)
         {
-            floor += GetFloor(input[index]);
+            floor += GetFloorChange(input[index]);
 
             if (floor == -1)
             {
@@ -57,12 +57,15 @@ public class Day01 : IPuzzle
     }
 
     /// <summary>
-    /// Converts one input character into its floor change.
+    /// Converts one input character into its corresponding floor change.
     /// </summary>
     /// <param name="character">A character from the puzzle input.</param>
     /// <returns>
-    private static int GetFloor(char item) =>
-        item switch
+    /// `1` for an opening parenthesis, `-1` for a closing parenthesis,
+    /// or `0` for any other character.
+    /// </returns>
+    private static int GetFloorChange(char character) =>
+        character switch
         {
             '(' => 1,
             ')' => -1,

@@ -21,7 +21,7 @@ public sealed class Day03Tests
     [InlineData(">", "2")]
     [InlineData("^>v<", "4")]
     [InlineData("^v^v^v^v^v", "2")]
-    public void SolvePartOne_WhenDirectionsAreProvided_ReturnsVisitedHouseCount(string input, string expectedAnswer)
+    public void SolvePartOneWhenDirectionsAreProvidedReturnsVisitedHouseCount(string input, string expectedAnswer)
     {
         // Act.
         var result = _puzzle.SolvePartOne(input);
@@ -44,7 +44,7 @@ public sealed class Day03Tests
     [InlineData("^v", "3")]
     [InlineData("^>v<", "3")]
     [InlineData("^v^v^v^v^v", "11")]
-    public void SolvePartTwo_WhenDirectionsAreProvided_ReturnsVisitedHouseCount(string input, string expectedAnswer)
+    public void SolvePartTwoWhenDirectionsAreProvidedReturnsVisitedHouseCount(string input, string expectedAnswer)
     {
         // Act.
         var result = _puzzle.SolvePartTwo(input);

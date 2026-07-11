@@ -48,14 +48,14 @@ public sealed class FakePuzzleInputProvider : IPuzzleInputProvider
     /// <summary>
     /// Returns predefined input without reading any files.
     /// </summary>
-    /// <param name="puzzleId">The requested puzzle identifier.</param>
+    /// <param name="id">The requested puzzle identifier.</param>
     /// <param name="inputKind">The requested input kind.</param>
     /// <param name="cancellationToken">The cancellation token passed by the caller.</param>
     /// <returns>A completed task containing the predefined input.</returns>
-    public Task<string> GetInputAsync(PuzzleId puzzleId, PuzzleInputKind inputKind, CancellationToken cancellationToken)
+    public Task<string> GetInputAsync(PuzzleId id, PuzzleInputKind inputKind, CancellationToken cancellationToken)
     {
         CallCount++;
-        RequestedPuzzleId = puzzleId;
+        RequestedPuzzleId = id;
         RequestedInputKind = inputKind;
         RequestedCancellationToken = cancellationToken;
 

@@ -24,7 +24,7 @@ namespace Aoc.Infrastructure.Inputs;
 /// </item>
 /// </list>
 /// </remarks>
-public class FilePuzzleInputProvider : IPuzzleInputProvider
+public sealed class FilePuzzleInputProvider : IPuzzleInputProvider
 {
     private readonly string _inputsRootPath;
 
@@ -54,7 +54,7 @@ public class FilePuzzleInputProvider : IPuzzleInputProvider
     /// <summary>
     /// Builds the expected file path for a puzzle input.
     /// </summary>
-    /// <param name=id">The year and day of the requested puzzle.</param>
+    /// <param name="id">The year and day of the requested puzzle.</param>
     /// <param name="inputKind">Specifies the demo or personal input location.</param>
     /// <returns>The full path to the requested input file.</returns>
     private string GetInputPath(PuzzleId id, PuzzleInputKind inputKind)
