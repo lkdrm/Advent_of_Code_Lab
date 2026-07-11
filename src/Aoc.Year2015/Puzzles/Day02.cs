@@ -11,11 +11,9 @@ namespace Aoc.Year2015.Puzzles;
 /// </remarks>
 public class Day02 : IPuzzle
 {
-    /// <summary>
-    /// Gets metadata used to identify and display this puzzle.
-    /// </summary>
+    /// <inheritdoc />
     public PuzzleMetadata Metadata { get; } = new(
-        id: new PuzzleId(2015, 2),
+        id: new(2015, 2),
         title: "I Was Told There Would Be No Math",
         description: "Calculates wrapping paper and ribbon required for presents.");
 
