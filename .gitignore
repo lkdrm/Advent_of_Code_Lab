@@ -430,3 +430,4 @@ FodyWeavers.xsd
 
 # Personal Advent of Code inputs stay local.
 inputs/local/
+Logs/

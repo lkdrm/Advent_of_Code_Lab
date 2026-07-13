@@ -42,6 +42,9 @@ Each puzzle day is developed incrementally and treated as a complete feature.
 - Protected `main` branch with required CI checks
 - XML documentation comments
 - Detailed Markdown guides for every completed puzzle
+- Structured puzzle-execution logging
+- Daily rolling JSON diagnostic logs
+- User-friendly CLI error handling
 
 ## Technology stack
 
@@ -55,6 +58,8 @@ Each puzzle day is developed incrementally and treated as a complete feature.
 | Coverlet | Code coverage collection |
 | GitHub Actions | Continuous integration |
 | Markdown | Step-by-step puzzle documentation |
+| Microsoft.Extensions.Logging | Application logging abstraction |
+| Serilog | Structured rolling JSON log provider |
 
 The required SDK version is defined in `global.json`:
 
@@ -172,6 +177,39 @@ services.AddSingleton<IPuzzle, Day03>();
 ```
 
 The CLI receives all registered `IPuzzle` implementations and displays them automatically.
+
+## Diagnostic logging
+
+Puzzle execution produces structured diagnostic events through
+`Microsoft.Extensions.Logging`.
+
+Serilog writes the events as daily rolling JSON files without mixing diagnostic
+output with the interactive Spectre.Console interface.
+
+Runtime location:
+
+```text
+<Aoc.Cli output>/Logs/aoc-YYYYMMDD.json
+
+| Event ID | Event name            | Level       | Meaning                                |
+| -------: | --------------------- | ----------- | -------------------------------------- |
+|     1000 | `ExecutionStarted`    | Information | A puzzle execution has started         |
+|     1001 | `PuzzlePartCompleted` | Information | One puzzle part completed successfully |
+|     1002 | `ExecutionCancelled`  | Information | Execution was cancelled                |
+|     1003 | `ExecutionFailed`     | Error       | Execution failed with an exception     |
+```
+
+The logs include puzzle identifiers, selected parts, input kinds, execution
+durations, and diagnostic exception details.
+
+Puzzle input contents are never written to logs.
+
+Log files:
+
+- roll daily;
+- roll when a file reaches 5 MB;
+- retain the latest 14 files;
+- remain local and are excluded from Git.
 
 ## Repository structure
 
@@ -359,6 +397,7 @@ Current areas of focus include:
 | ✅ | Continuous integration | GitHub Actions restore, build, and test pipeline |
 | ✅ | Protected workflow | Required pull requests, CI checks, and protected `main` |
 | ✅ | Documentation standards | XML comments, guides, contribution rules, and PR checklist |
+| ✅ | Structured logging | Source-generated events and rolling JSON diagnostic logs |
 | 🚧 | Advent of Code 2015 | `3 / 25` puzzle days completed |
 | 📋 | Additional years | Add support for more Advent of Code events |
 | 📋 | Code coverage | Generate and publish coverage reports |

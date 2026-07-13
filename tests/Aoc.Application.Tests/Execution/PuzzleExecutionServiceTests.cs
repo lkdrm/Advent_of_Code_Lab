@@ -2,6 +2,7 @@
 using Aoc.Abstractions.Puzzles;
 using Aoc.Application.Execution;
 using Aoc.Application.Tests.Support;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Aoc.Application.Tests.Execution;
 
@@ -32,7 +33,8 @@ public sealed class PuzzleExecutionServiceTests
 
         var service = new PuzzleExecutionService(
             puzzles: [puzzle],
-            inputProvider: inputProvider);
+            inputProvider: inputProvider,
+            logger: NullLogger<PuzzleExecutionService>.Instance);
 
         // Act.
         var result = await service.ExecuteAsync(
@@ -84,7 +86,8 @@ public sealed class PuzzleExecutionServiceTests
 
         var service = new PuzzleExecutionService(
             puzzles: [puzzle],
-            inputProvider: inputProvider);
+            inputProvider: inputProvider,
+            logger: NullLogger<PuzzleExecutionService>.Instance);
 
         // Act.
         var result = await service.ExecuteAsync(
@@ -135,7 +138,8 @@ public sealed class PuzzleExecutionServiceTests
 
         var service = new PuzzleExecutionService(
             puzzles: [puzzle],
-            inputProvider: inputProvider);
+            inputProvider: inputProvider,
+            logger: NullLogger<PuzzleExecutionService>.Instance);
 
         // Act.
         var result = await service.ExecuteAsync(
@@ -192,7 +196,8 @@ public sealed class PuzzleExecutionServiceTests
 
         var service = new PuzzleExecutionService(
             puzzles: [registeredPuzzle],
-            inputProvider: inputProvider);
+            inputProvider: inputProvider,
+            logger: NullLogger<PuzzleExecutionService>.Instance);
 
         // Act.
         var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
@@ -229,7 +234,8 @@ public sealed class PuzzleExecutionServiceTests
 
         var service = new PuzzleExecutionService(
             puzzles: [puzzle],
-            inputProvider: inputProvider);
+            inputProvider: inputProvider,
+            logger: NullLogger<PuzzleExecutionService>.Instance);
 
         // Act.
         var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
@@ -266,7 +272,8 @@ public sealed class PuzzleExecutionServiceTests
 
         var service = new PuzzleExecutionService(
             puzzles: [puzzle],
-            inputProvider: inputProvider);
+            inputProvider: inputProvider,
+            logger: NullLogger<PuzzleExecutionService>.Instance);
 
         // Act.
         var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
@@ -303,7 +310,8 @@ public sealed class PuzzleExecutionServiceTests
 
         var service = new PuzzleExecutionService(
             puzzles: [puzzle],
-            inputProvider: inputProvider);
+            inputProvider: inputProvider,
+            logger: NullLogger<PuzzleExecutionService>.Instance);
 
         using var cancellationTokenSource =
             new CancellationTokenSource();
@@ -342,7 +350,8 @@ public sealed class PuzzleExecutionServiceTests
         var exception = Assert.Throws<ArgumentNullException>(
             () => new PuzzleExecutionService(
                 puzzles: null!,
-                inputProvider: inputProvider));
+                inputProvider: inputProvider,
+                logger: NullLogger<PuzzleExecutionService>.Instance));
 
         // Assert.
         Assert.Equal("puzzles", exception.ParamName);
@@ -364,7 +373,8 @@ public sealed class PuzzleExecutionServiceTests
         var exception = Assert.Throws<ArgumentNullException>(
             () => new PuzzleExecutionService(
                 puzzles: [puzzle],
-                inputProvider: null!));
+                inputProvider: null!,
+                logger: NullLogger<PuzzleExecutionService>.Instance));
 
         // Assert.
         Assert.Equal("inputProvider", exception.ParamName);
@@ -384,7 +394,8 @@ public sealed class PuzzleExecutionServiceTests
         var exception = Assert.Throws<ArgumentException>(
             () => new PuzzleExecutionService(
                 puzzles: [],
-                inputProvider: inputProvider));
+                inputProvider: inputProvider,
+                logger: NullLogger<PuzzleExecutionService>.Instance));
 
         // Assert.
         Assert.Equal("puzzles", exception.ParamName);
@@ -404,7 +415,8 @@ public sealed class PuzzleExecutionServiceTests
         var exception = Assert.Throws<ArgumentException>(
             () => new PuzzleExecutionService(
                 puzzles: [null!],
-                inputProvider: inputProvider));
+                inputProvider: inputProvider,
+                logger: NullLogger<PuzzleExecutionService>.Instance));
 
         // Assert.
         Assert.Equal("puzzles", exception.ParamName);
@@ -440,10 +452,36 @@ public sealed class PuzzleExecutionServiceTests
                     firstPuzzle,
                 secondPuzzle,
                 ],
-                inputProvider: inputProvider));
+                inputProvider: inputProvider,
+                logger: NullLogger<PuzzleExecutionService>.Instance));
 
         // Assert.
         Assert.Equal("puzzles", exception.ParamName);
         Assert.Contains(duplicateId.ToString(), exception.Message);
+    }
+
+    /// <summary>
+    /// Verifies that a missing logger dependency is rejected.
+    /// </summary>
+    [Fact]
+    public void ConstructorWhenLoggerIsNullThrowsArgumentNullException()
+    {
+        var puzzle = new FakePuzzle(
+                metadata: new PuzzleMetadata(
+                id: new PuzzleId(2015, 1),
+                title: "Fake Puzzle"));
+
+        var inputProvider = new FakePuzzleInputProvider(
+                input: "demo-input");
+
+        // Act.
+        var exception = Assert.Throws<ArgumentNullException>(
+            () => new PuzzleExecutionService(
+                puzzles: [puzzle],
+                inputProvider: inputProvider,
+                logger: null!));
+
+        // Assert.
+        Assert.Equal("logger", exception.ParamName);
     }
 }
