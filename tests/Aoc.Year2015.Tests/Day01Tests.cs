@@ -7,6 +7,8 @@ namespace Aoc.Year2015.Tests;
 /// </summary>
 public sealed class Day01Tests
 {
+    private readonly Day01 _puzzle = new();
+
     /// <summary>
     /// Verifies that Part One calculates Santa's final floor correctly
     /// for the examples provided in the Advent of Code puzzle description.
@@ -25,11 +27,8 @@ public sealed class Day01Tests
     [InlineData(")())())", "-3")]
     public void SolvePartOneReturnsExpectedFinalFloor(string input, string expectedFloor)
     {
-        // Arrange: create the puzzle implementation we want to test.
-        var puzzle = new Day01();
-
         // Act: execute only Part One with a known input.
-        var actualFloor = puzzle.SolvePartOne(input);
+        var actualFloor = _puzzle.SolvePartOne(input);
 
         // Assert: compare the actual result with the expected AoC answer.
         Assert.Equal(expectedFloor, actualFloor);
@@ -48,13 +47,90 @@ public sealed class Day01Tests
     [InlineData("()())", "5")]
     public void SolvePartTwoReturnsFirstBasementPosition(string input, string expectedPosition)
     {
-        // Arrange.
-        var puzzle = new Day01();
-
         // Act.
-        var actualPosition = puzzle.SolvePartTwo(input);
+        var actualPosition = _puzzle.SolvePartTwo(input);
 
         // Assert.
         Assert.Equal(expectedPosition, actualPosition);
+    }
+
+    /// <summary>
+    /// Verifies that Part One rejects a missing input.
+    /// </summary>
+    [Fact]
+    public void SolvePartOneWhenInputIsNullThrowsArgumentNullException()
+    {
+        // Act.
+        var exception = Assert.Throws<ArgumentNullException>(
+            () => _puzzle.SolvePartOne(null!));
+
+        // Assert.
+        Assert.Equal("input", exception.ParamName);
+    }
+
+    /// <summary>
+    /// Verifies that Part Two rejects a missing input.
+    /// </summary>
+    [Fact]
+    public void SolvePartTwoWhenInputIsNullThrowsArgumentNullException()
+    {
+        // Act.
+        var exception = Assert.Throws<ArgumentNullException>(
+            () => _puzzle.SolvePartTwo(null!));
+
+        // Assert.
+        Assert.Equal("input", exception.ParamName);
+    }
+
+    /// <summary>
+    /// Verifies that trailing file whitespace does not change
+    /// the first basement position.
+    /// </summary>
+    [Fact]
+    public void SolvePartTwoWhenInputHasTrailingWhitespaceReturnsCorrectPosition()
+    {
+        // Act.
+        var result = _puzzle.SolvePartTwo(")\r\n");
+
+        // Assert.
+        Assert.Equal("1", result);
+    }
+
+    /// <summary>
+    /// Verifies that Part One rejects empty or whitespace-only input.
+    /// </summary>
+    /// <param name="input">An empty or whitespace-only puzzle input.</param>
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("\r\n")]
+    public void SolvePartOneWhenInputIsEmptyOrWhitespaceThrowsArgumentException(
+        string input)
+    {
+        // Act.
+        var exception = Assert.Throws<ArgumentException>(
+            () => _puzzle.SolvePartOne(input));
+
+        // Assert.
+        Assert.Equal("input", exception.ParamName);
+    }
+
+    /// <summary>
+    /// Verifies that Part One rejects empty or whitespace-only input.
+    /// </summary>
+    /// <param name="input">An empty or whitespace-only puzzle input.</param>
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("\r\n")]
+    public void SolvePartTwoWhenInputIsEmptyOrWhitespaceThrowsArgumentException(
+        string input)
+    {
+        // Act.
+        var exception = Assert.Throws<ArgumentException>(
+            () => _puzzle.SolvePartTwo(input));
+
+        // Assert.
+        Assert.Equal("input", exception.ParamName);
     }
 }
