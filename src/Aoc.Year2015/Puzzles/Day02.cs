@@ -26,6 +26,8 @@ public sealed class Day02 : IPuzzle
     /// <returns>The total amount of wrapping paper required.</returns>
     public string SolvePartOne(string input)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(input);
+        
         var totalWrappingPaper = 0;
 
         foreach (var present in ParsePresents(input))
@@ -45,6 +47,8 @@ public sealed class Day02 : IPuzzle
     /// <returns>The total ribbon length required.</returns>
     public string SolvePartTwo(string input)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(input);
+
         var totalRibbon = 0;
         foreach (var present in ParsePresents(input))
         {

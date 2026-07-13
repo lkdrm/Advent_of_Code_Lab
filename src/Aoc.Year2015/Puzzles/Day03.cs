@@ -30,6 +30,8 @@ public sealed class Day03 : IPuzzle
     /// </returns>
     public string SolvePartOne(string input)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(input);
+
         var currentPosition = (X: 0, Y: 0);
 
         var visitedHouses = new HashSet<(int X, int Y)> { currentPosition };
@@ -55,6 +57,8 @@ public sealed class Day03 : IPuzzle
     /// </returns>
     public string SolvePartTwo(string input)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(input);
+
         var santaPosition = (X: 0, Y: 0);
         var roboSantaPosition = (X: 0, Y: 0);
 

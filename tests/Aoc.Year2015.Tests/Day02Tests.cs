@@ -74,4 +74,72 @@ public sealed class Day02Tests
         // Assert.
         Assert.Equal("48", result);
     }
+
+    /// <summary>
+    /// Verifies that Part One rejects a missing puzzle input.
+    /// </summary>
+    [Fact]
+    public void SolvePartOneWhenInputIsNullThrowsArgumentNullException()
+    {
+        // Act.
+        var exception = Assert.Throws<ArgumentNullException>(
+            () => _puzzle.SolvePartOne(null!));
+
+        // Assert.
+        Assert.Equal("input", exception.ParamName);
+    }
+
+    /// <summary>
+    /// Verifies that Part Two rejects a missing puzzle input.
+    /// </summary>
+    [Fact]
+    public void SolvePartTwoWhenInputIsNullThrowsArgumentNullException()
+    {
+        var puzzle = new Day02();
+
+        // Act.
+        var exception = Assert.Throws<ArgumentNullException>(
+            () => puzzle.SolvePartTwo(null!));
+
+        // Assert.
+        Assert.Equal("input", exception.ParamName);
+    }
+
+    /// <summary>
+    /// Verifies that Part One rejects empty or whitespace-only puzzle input.
+    /// </summary>
+    /// <param name="input">An empty or whitespace-only puzzle input.</param>
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("\r\n")]
+    public void SolvePartOneWhenInputIsEmptyOrWhitespaceThrowsArgumentException(
+        string input)
+    {
+        // Act.
+        var exception = Assert.Throws<ArgumentException>(
+            () => _puzzle.SolvePartOne(input));
+
+        // Assert.
+        Assert.Equal("input", exception.ParamName);
+    }
+
+    /// <summary>
+    /// Verifies that Part Two rejects empty or whitespace-only puzzle input.
+    /// </summary>
+    /// <param name="input">An empty or whitespace-only puzzle input.</param>
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("\r\n")]
+    public void SolvePartTwoWhenInputIsEmptyOrWhitespaceThrowsArgumentException(
+        string input)
+    {
+        // Act.
+        var exception = Assert.Throws<ArgumentException>(
+            () => _puzzle.SolvePartTwo(input));
+
+        // Assert.
+        Assert.Equal("input", exception.ParamName);
+    }
 }

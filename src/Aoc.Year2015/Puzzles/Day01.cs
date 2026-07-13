@@ -24,9 +24,10 @@ public sealed class Day01 : IPuzzle
     /// <returns>The final floor number.</returns>
     public string SolvePartOne(string input)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(input);
         var floor = 0;
 
-        foreach (var item in input)
+        foreach (var item in input.Trim())
         {
             floor += GetFloorChange(item);
         }
@@ -41,11 +42,12 @@ public sealed class Day01 : IPuzzle
     /// <returns>The one-based position that first reaches the basement.</returns>
     public string SolvePartTwo(string input)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(input);
         var floor = 0;
 
         for (var index = 0; index < input.Length; index++)
         {
-            floor += GetFloorChange(input[index]);
+            floor += GetFloorChange(input.Trim()[index]);
 
             if (floor == -1)
             {
