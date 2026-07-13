@@ -68,4 +68,3 @@ public sealed class FilePuzzleInputProvider : IPuzzleInputProvider
         return Path.Combine(_inputsRootPath, inputFolderName, id.Year.ToString(), $"day{id.Day:D2}.txt");
     }
 }
-

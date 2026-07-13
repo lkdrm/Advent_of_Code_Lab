@@ -131,4 +131,71 @@ public sealed class FilePuzzleInputProviderTests : IDisposable
             Directory.Delete(_inputsRootPath, recursive: true);
         }
     }
+
+    /// <summary>
+    /// Verifies that the resolver finds the Inputs directory in a parent directory.
+    /// </summary>
+    [Fact]
+    public void ResolveWhenInputsDirectoryExistsInParentReturnsInputsPath()
+    {
+        // Arrange.
+        var rootPath = Path.Combine(
+            Path.GetTempPath(),
+            "aoc-input-path-tests",
+            Guid.NewGuid().ToString("N"));
+
+        var expectedPath = Path.Combine(rootPath, "Inputs");
+        var nestedPath = Path.Combine(
+            rootPath,
+            "src",
+            "Aoc.Cli",
+            "bin",
+            "Debug",
+            "net10.0");
+
+        Directory.CreateDirectory(expectedPath);
+        Directory.CreateDirectory(nestedPath);
+
+        try
+        {
+            // Act.
+            var result = InputsRootPathResolver.Resolve(nestedPath);
+
+            // Assert.
+            Assert.Equal(expectedPath, result);
+        }
+        finally
+        {
+            Directory.Delete(rootPath, recursive: true);
+        }
+    }
+
+    /// <summary>
+    /// Verifies that a missing Inputs directory produces a clear exception.
+    /// </summary>
+    [Fact]
+    public void ResolveWhenInputsDirectoryDoesNotExistThrowsDirectoryNotFoundException()
+    {
+        // Arrange.
+        var startPath = Path.Combine(
+            Path.GetTempPath(),
+            "aoc-input-path-tests",
+            Guid.NewGuid().ToString("N"));
+
+        Directory.CreateDirectory(startPath);
+
+        try
+        {
+            // Act.
+            var exception = Assert.Throws<DirectoryNotFoundException>(
+                () => InputsRootPathResolver.Resolve(startPath));
+
+            // Assert.
+            Assert.Contains(startPath, exception.Message);
+        }
+        finally
+        {
+            Directory.Delete(startPath, recursive: true);
+        }
+    }
 }

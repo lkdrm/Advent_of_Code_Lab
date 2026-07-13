@@ -15,11 +15,10 @@ Console.CancelKeyPress += (_, eventArgs) =>
     cts.Cancel();
 };
 
-var rootRepositoryPath = Directory.GetCurrentDirectory();
-var inputsRootPath = Path.Combine(rootRepositoryPath, "Inputs");
+var rootRepositoryPath = InputsRootPathResolver.Resolve(AppContext.BaseDirectory);
 
 var services = new ServiceCollection();
-services.AddSingleton<IPuzzleInputProvider>(_ => new FilePuzzleInputProvider(inputsRootPath));
+services.AddSingleton<IPuzzleInputProvider>(_ => new FilePuzzleInputProvider(rootRepositoryPath));
 services.AddYear2015Puzzles();
 services.AddApplication();
 
