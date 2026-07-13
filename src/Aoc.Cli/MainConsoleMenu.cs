@@ -69,16 +69,41 @@ public static class MainConsoleMenu
                         PuzzlePart.PartOne,
                         PuzzlePart.PartTwo,
                         PuzzlePart.Both));
+            try
+            {
+                var results = await executionService.ExecuteAsync(
+                    id: selectedPuzzle.Metadata.Id,
+                    puzzlePart: selectedPuzzlePart,
+                    inputKind: selectedInputKind,
+                    cancellationToken: cancellationTokenSource.Token);
 
-            var results = await executionService.ExecuteAsync(
-                id: selectedPuzzle.Metadata.Id,
-                puzzlePart: selectedPuzzlePart,
-                inputKind: selectedInputKind,
-                cancellationToken: cancellationTokenSource.Token);
-
-            ShowResults(results);
-
-            shouldContinue = AnsiConsole.Confirm("Run another puzzle?", defaultValue: true);
+                ShowResults(results);
+            }
+            catch (OperationCanceledException) when (cancellationTokenSource.IsCancellationRequested)
+            {
+                break;
+            }
+            catch (FileNotFoundException ex)
+            {
+                ShowError($"Input file was not found. {ex.Message}");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ShowError($"Input file was not found. {ex.Message}");
+            }
+            catch (IOException ex)
+            {
+                ShowError($"Input file could not be read. {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                ShowError($"An error has been provided.{ex.Message}");
+            }
+            
+            if (!cancellationTokenSource.IsCancellationRequested)
+            {
+                shouldContinue = AnsiConsole.Confirm("Run another puzzle?", defaultValue: true);
+            }
         }
     }
 
@@ -109,5 +134,17 @@ public static class MainConsoleMenu
         }
 
         AnsiConsole.Write(table);
+    }
+
+    /// <summary>
+    /// Displays a user-friendly error message.
+    /// </summary>
+    /// <param name="message">The error message to display.</param>
+    private static void ShowError(string message)
+    {
+        AnsiConsole.WriteLine();
+        AnsiConsole.MarkupLine(
+            $"[red]Error:[/] {Markup.Escape(message)}");
+        AnsiConsole.WriteLine();
     }
 }
