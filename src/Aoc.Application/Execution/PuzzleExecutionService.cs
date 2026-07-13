@@ -1,5 +1,6 @@
 ﻿using Aoc.Abstractions.Inputs;
 using Aoc.Abstractions.Puzzles;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace Aoc.Application.Execution;
@@ -19,6 +20,7 @@ public sealed class PuzzleExecutionService : IPuzzleExecutionService
 {
     private readonly IReadOnlyDictionary<PuzzleId, IPuzzle> _puzzles;
     private readonly IPuzzleInputProvider _inputProvider;
+    private readonly ILogger<PuzzleExecutionService> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PuzzleExecutionService"/> class.
@@ -29,6 +31,9 @@ public sealed class PuzzleExecutionService : IPuzzleExecutionService
     /// <param name="inputProvider">
     /// The service used to retrieve puzzle input content.
     /// </param>
+    /// <param name="logger">
+    /// The logger used to record puzzle-execution events.
+    /// </param>
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="puzzles"/> or
     /// <paramref name="inputProvider"/> is <see langword="null"/>.
@@ -37,10 +42,11 @@ public sealed class PuzzleExecutionService : IPuzzleExecutionService
     /// Thrown when <paramref name="puzzles"/> is empty,
     /// contains a null entry, or contains duplicate puzzle identifiers.
     /// </exception>
-    public PuzzleExecutionService(IEnumerable<IPuzzle> puzzles, IPuzzleInputProvider inputProvider)
+    public PuzzleExecutionService(IEnumerable<IPuzzle> puzzles, IPuzzleInputProvider inputProvider, ILogger<PuzzleExecutionService> logger)
     {
         ArgumentNullException.ThrowIfNull(puzzles);
         ArgumentNullException.ThrowIfNull(inputProvider);
+        ArgumentNullException.ThrowIfNull(logger);
 
         var puzzleDictionary = new Dictionary<PuzzleId, IPuzzle>();
 
@@ -64,6 +70,7 @@ public sealed class PuzzleExecutionService : IPuzzleExecutionService
 
         _puzzles = puzzles.ToDictionary(puzzle => puzzle.Metadata.Id, puzzle => puzzle);
         _inputProvider = inputProvider;
+        _logger = logger;
     }
 
     /// <inheritdoc />
@@ -86,42 +93,72 @@ public sealed class PuzzleExecutionService : IPuzzleExecutionService
             throw new KeyNotFoundException($"No puzzle is registered for '{id}'.");
         }
 
-        var input = await _inputProvider.GetInputAsync(id, inputKind, cancellationToken);
-
-        var partResults = new List<PuzzlePartResult>();
-
-        switch (puzzlePart)
+        try
         {
-            case PuzzlePart.PartOne:
-                partResults.Add(ExecutePart(PuzzlePart.PartOne, input, puzzle.SolvePartOne));
-                break;
-            case PuzzlePart.PartTwo:
-                partResults.Add(ExecutePart(PuzzlePart.PartTwo, input, puzzle.SolvePartTwo));
-                break;
-            case PuzzlePart.Both:
-                partResults.Add(ExecutePart(PuzzlePart.PartOne, input, puzzle.SolvePartOne));
-                partResults.Add(ExecutePart(PuzzlePart.PartTwo, input, puzzle.SolvePartTwo));
-                break;
-        }
+            var input = await _inputProvider.GetInputAsync(id, inputKind, cancellationToken);
 
-        return new PuzzleRunResult(puzzle.Metadata, inputKind, partResults);
+            var partResults = new List<PuzzlePartResult>();
+
+            switch (puzzlePart)
+            {
+                case PuzzlePart.PartOne:
+                    partResults.Add(ExecutePart(id, PuzzlePart.PartOne, input, inputKind, puzzle.SolvePartOne));
+                    break;
+                case PuzzlePart.PartTwo:
+                    partResults.Add(ExecutePart(id, PuzzlePart.PartTwo, input, inputKind, puzzle.SolvePartTwo));
+                    break;
+                case PuzzlePart.Both:
+                    partResults.Add(ExecutePart(id, PuzzlePart.PartOne, input, inputKind, puzzle.SolvePartOne));
+                    partResults.Add(ExecutePart(id, PuzzlePart.PartTwo, input, inputKind, puzzle.SolvePartTwo));
+                    break;
+            }
+
+            foreach (var result in partResults)
+            {
+                _logger.PuzzlePartCompleted(id, result.PuzzlePart, result.Duration.TotalMilliseconds);
+            }
+
+            return new PuzzleRunResult(puzzle.Metadata, inputKind, partResults);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            _logger.ExecutionCancelled(id, puzzlePart, inputKind);
+            throw;
+        }
+        catch (Exception exception)
+        {
+            _logger.ExecutionFailed(id, puzzlePart, inputKind, exception);
+            throw;
+        }
     }
 
     /// <summary>
     /// Executes one synchronous puzzle-solving method and measures its duration.
     /// </summary>
-    /// <param name="part">The concrete puzzle part being executed.</param>
-    /// <param name="input">The already loaded puzzle input.</param>
+    /// <param name="id">
+    /// Identifies the year and day of the puzzle to execute.
+    /// </param>
+    /// <param name="puzzlePart">
+    /// The concrete puzzle part being executed.
+    /// </param>
+    /// <param name="input">
+    /// The already loaded puzzle input.
+    /// </param>
+    /// <param name="inputKind">
+    /// Specifies whether to load demo or personal input.
+    /// </param>
     /// <param name="solve">
     /// The synchronous method that solves the selected puzzle part.
     /// </param>
     /// <returns>The answer and execution duration for the selected puzzle part.</returns>
-    private static PuzzlePartResult ExecutePart(PuzzlePart part, string input, Func<string, string> solve)
+    private PuzzlePartResult ExecutePart(PuzzleId id, PuzzlePart puzzlePart, string input, PuzzleInputKind inputKind, Func<string, string> solve)
     {
+        _logger.ExecutionStarted(id, puzzlePart, inputKind);
+
         var stopWatch = Stopwatch.StartNew();
         var answer = solve(input);
         stopWatch.Stop();
 
-        return new PuzzlePartResult(part, answer, stopWatch.Elapsed);
+        return new PuzzlePartResult(puzzlePart, answer, stopWatch.Elapsed);
     }
 }

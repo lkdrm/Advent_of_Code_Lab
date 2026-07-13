@@ -89,7 +89,7 @@ public static class MainConsoleMenu
             }
             catch (UnauthorizedAccessException ex)
             {
-                ShowError($"Input file was not found. {ex.Message}");
+                ShowError($"Input file cannot be accessed. {ex.Message}");
             }
             catch (IOException ex)
             {
@@ -97,9 +97,9 @@ public static class MainConsoleMenu
             }
             catch (Exception ex)
             {
-                ShowError($"An error has been provided.{ex.Message}");
+                ShowError($"An unexpected error occurred. Check the Logs directory for details.{ex.Message}");
             }
-            
+
             if (!cancellationTokenSource.IsCancellationRequested)
             {
                 shouldContinue = AnsiConsole.Confirm("Run another puzzle?", defaultValue: true);
