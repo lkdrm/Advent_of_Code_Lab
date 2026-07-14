@@ -1,5 +1,4 @@
 ﻿using Aoc.Abstractions.Puzzles;
-using Aoc.Year2015.Puzzles;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Aoc.Year2015;
@@ -14,11 +13,19 @@ public static class DependencyInjection
     /// </summary>
     /// <param name="services">The dependency-injection service collection.</param>
     /// <returns>The same service collection so registrations can be chained.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="services"/> is <see langword="null"/>.
+    /// </exception>
     public static IServiceCollection AddYear2015Puzzles(this IServiceCollection services)
     {
-        services.AddSingleton<IPuzzle, Day01>();
-        services.AddSingleton<IPuzzle, Day02>();
-        services.AddSingleton<IPuzzle, Day03>();
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.Scan(scan => scan
+            .FromAssemblyOf<Year2015AssemblyMarker>()
+            .AddClasses(classes => classes.AssignableTo<IPuzzle>())
+            .As<IPuzzle>()
+            .WithSingletonLifetime());
+
         return services;
     }
 }

@@ -30,13 +30,12 @@ Each puzzle day is developed incrementally and treated as a complete feature.
 ## Features
 
 - Interactive CLI powered by `Spectre.Console`
-- Automatic discovery of registered puzzles
 - Selection of puzzle year and day
+- Automatic puzzle discovery and singleton DI registration through assembly scanning
 - Demo and personal input modes
 - Part One, Part Two, or Both execution
 - Execution-time measurement
 - Asynchronous file-based input loading
-- Dependency-injection-based puzzle registration
 - Unit tests for puzzles, application services, and infrastructure
 - GitHub Actions build and test validation
 - Protected `main` branch with required CI checks
@@ -60,6 +59,7 @@ Each puzzle day is developed incrementally and treated as a complete feature.
 | Markdown | Step-by-step puzzle documentation |
 | Microsoft.Extensions.Logging | Application logging abstraction |
 | Serilog | Structured rolling JSON log provider |
+| Scrutor | Assembly scanning and convention-based puzzle registration |
 
 The required SDK version is defined in `global.json`:
 
@@ -141,42 +141,33 @@ flowchart TD
 | `Aoc.Abstractions` | Shared contracts, puzzle identifiers, metadata, input types, and result models |
 | `Aoc.Application` | Puzzle lookup, input coordination, execution, and timing |
 | `Aoc.Infrastructure` | File-based loading of demo and personal inputs |
-| `Aoc.Year2015` | Advent of Code 2015 puzzle implementations and DI registration |
+| `Aoc.Year2015` | Advent of Code 2015 puzzle implementations and automatic DI registration through assembly scanning |
 | `Aoc.Cli` | Application startup, interactive menu, and result presentation |
 | `Aoc.Abstractions.Tests` | Tests for identifiers, metadata, and shared contracts |
 | `Aoc.Application.Tests` | Tests for puzzle execution behavior and result models |
 | `Aoc.Infrastructure.Tests` | Tests for file-based input loading |
-| `Aoc.Year2015.Tests` | Tests for individual puzzle algorithms |
+| `Aoc.Year2015.Tests` | Tests for puzzle algorithms and automatic registration conventions |
 
 ## Execution flow
 
-When a puzzle is selected, the application follows this flow:
+The CLI does not create or register puzzle classes manually.
 
-```text
-User selects a puzzle in Aoc.Cli
-                ↓
-IPuzzleExecutionService receives the request
-                ↓
-IPuzzleInputProvider loads the selected input asynchronously
-                ↓
-The registered IPuzzle implementation executes
-                ↓
-Application measures execution duration
-                ↓
-CLI displays the answer and timing information
-```
-
-The CLI does not create puzzle classes manually.
-
-Puzzle implementations are registered through dependency injection:
+Puzzle implementations are discovered automatically through assembly scanning:
 
 ```csharp
-services.AddSingleton<IPuzzle, Day01>();
-services.AddSingleton<IPuzzle, Day02>();
-services.AddSingleton<IPuzzle, Day03>();
+services.Scan(scan => scan
+    .FromAssemblyOf<Year2015AssemblyMarker>()
+    .AddClasses(classes => classes.AssignableTo<IPuzzle>())
+    .As<IPuzzle>()
+    .WithSingletonLifetime());
 ```
 
-The CLI receives all registered `IPuzzle` implementations and displays them automatically.
+`Year2015AssemblyMarker` identifies the assembly to scan. Every public,
+non-abstract class in `Aoc.Year2015` that implements `IPuzzle` is registered
+automatically as a singleton.
+
+The CLI receives all discovered `IPuzzle` implementations and displays them
+without requiring changes to its startup code.
 
 ## Diagnostic logging
 
@@ -352,7 +343,7 @@ Every new puzzle day follows the same workflow:
 3. Define its `PuzzleMetadata`.
 4. Implement Part One and Part Two.
 5. Extract shared logic where appropriate.
-6. Register the puzzle through dependency injection.
+6. Verify that the puzzle is discovered automatically through dependency injection.
 7. Add a demo input.
 8. Add unit tests for both parts.
 9. Add XML documentation comments.
@@ -424,7 +415,7 @@ Continue implementing Advent of Code 2015 one puzzle at a time. Every completed 
 - Part One and Part Two;
 - unit tests;
 - demo input;
-- dependency-injection registration;
+- automatic discovery through the `IPuzzle` registration convention;
 - XML documentation comments;
 - a detailed Markdown guide;
 - successful CLI execution;
