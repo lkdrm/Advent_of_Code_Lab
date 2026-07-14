@@ -59,7 +59,7 @@ jobs:
 
           & ./.github/scripts/Write-CiSummary.ps1 @parameters
 
-            - name: Update pull request description
+      - name: Update pull request description
         if: >
           always() &&
           github.event_name == 'pull_request' &&
