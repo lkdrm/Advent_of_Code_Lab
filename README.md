@@ -190,6 +190,7 @@ Runtime location:
 
 ```text
 <Aoc.Cli output>/Logs/aoc-YYYYMMDD.json
+```
 
 | Event ID | Event name            | Level       | Meaning                                |
 | -------: | --------------------- | ----------- | -------------------------------------- |
@@ -197,7 +198,6 @@ Runtime location:
 |     1001 | `PuzzlePartCompleted` | Information | One puzzle part completed successfully |
 |     1002 | `ExecutionCancelled`  | Information | Execution was cancelled                |
 |     1003 | `ExecutionFailed`     | Error       | Execution failed with an exception     |
-```
 
 The logs include puzzle identifiers, selected parts, input kinds, execution
 durations, and diagnostic exception details.
@@ -327,6 +327,21 @@ Run all automated tests
 The `main` branch is protected.
 
 A pull request cannot be merged until the required `Build and test` check has completed successfully.
+
+### Automated pull request reporting
+
+For pull requests created from branches in this repository, CI automatically updates generated sections of the pull request description with:
+
+- a change summary grouped by Conventional Commit type;
+- the number of commits and changed files;
+- added and removed line counts;
+- build status;
+- total, passed, failed, and skipped test counts;
+- the tested commit and a link to the workflow run.
+
+Only content between the generated-section markers is replaced. Manually written summaries, puzzle details, and checklists are preserved.
+
+Pull requests from forks still run build and tests, but the description updater is skipped to keep the workflow token read-only.
 
 ## Adding a new puzzle
 
