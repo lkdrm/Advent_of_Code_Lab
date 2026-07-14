@@ -34,10 +34,10 @@ public sealed class PuzzleExecutionService : IPuzzleExecutionService
     /// <param name="logger">
     /// The logger used to record puzzle-execution events.
     /// </param>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown when <paramref name="puzzles"/>,
-    /// <paramref name="inputProvider"/>, or
-    /// <paramref name="logger"/> is <see langword="null"/>.
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="puzzles"/> is empty,
+    /// contains a <see langword="null"/> entry,
+    /// or contains duplicate puzzle identifiers.
     /// </exception>
     public PuzzleExecutionService(IEnumerable<IPuzzle> puzzles, IPuzzleInputProvider inputProvider, ILogger<PuzzleExecutionService> logger)
     {

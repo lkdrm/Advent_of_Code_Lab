@@ -21,7 +21,6 @@ public static class MainConsoleMenu
     /// <summary>
     /// Starts the interactive Advent of Code menu loop.
     /// </summary>
-
     /// <param name="executionService">
     /// The application service responsible for loading input and executing puzzles.
     /// </param>
