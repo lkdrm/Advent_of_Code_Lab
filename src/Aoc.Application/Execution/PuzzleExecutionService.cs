@@ -35,12 +35,9 @@ public sealed class PuzzleExecutionService : IPuzzleExecutionService
     /// The logger used to record puzzle-execution events.
     /// </param>
     /// <exception cref="ArgumentNullException">
-    /// Thrown when <paramref name="puzzles"/> or
-    /// <paramref name="inputProvider"/> is <see langword="null"/>.
-    /// </exception>
-    /// <exception cref="ArgumentException">
-    /// Thrown when <paramref name="puzzles"/> is empty,
-    /// contains a null entry, or contains duplicate puzzle identifiers.
+    /// Thrown when <paramref name="puzzles"/>,
+    /// <paramref name="inputProvider"/>, or
+    /// <paramref name="logger"/> is <see langword="null"/>.
     /// </exception>
     public PuzzleExecutionService(IEnumerable<IPuzzle> puzzles, IPuzzleInputProvider inputProvider, ILogger<PuzzleExecutionService> logger)
     {
@@ -68,7 +65,7 @@ public sealed class PuzzleExecutionService : IPuzzleExecutionService
             throw new ArgumentException("At least one puzzle must be registered.", nameof(puzzles));
         }
 
-        _puzzles = puzzles.ToDictionary(puzzle => puzzle.Metadata.Id, puzzle => puzzle);
+        _puzzles = puzzleDictionary;
         _inputProvider = inputProvider;
         _logger = logger;
     }
@@ -93,6 +90,8 @@ public sealed class PuzzleExecutionService : IPuzzleExecutionService
             throw new KeyNotFoundException($"No puzzle is registered for '{id}'.");
         }
 
+        _logger.ExecutionStarted(id, puzzlePart, inputKind);
+
         try
         {
             var input = await _inputProvider.GetInputAsync(id, inputKind, cancellationToken);
@@ -102,20 +101,15 @@ public sealed class PuzzleExecutionService : IPuzzleExecutionService
             switch (puzzlePart)
             {
                 case PuzzlePart.PartOne:
-                    partResults.Add(ExecutePart(id, PuzzlePart.PartOne, input, inputKind, puzzle.SolvePartOne));
+                    partResults.Add(ExecutePart(id, PuzzlePart.PartOne, input, puzzle.SolvePartOne));
                     break;
                 case PuzzlePart.PartTwo:
-                    partResults.Add(ExecutePart(id, PuzzlePart.PartTwo, input, inputKind, puzzle.SolvePartTwo));
+                    partResults.Add(ExecutePart(id, PuzzlePart.PartTwo, input, puzzle.SolvePartTwo));
                     break;
                 case PuzzlePart.Both:
-                    partResults.Add(ExecutePart(id, PuzzlePart.PartOne, input, inputKind, puzzle.SolvePartOne));
-                    partResults.Add(ExecutePart(id, PuzzlePart.PartTwo, input, inputKind, puzzle.SolvePartTwo));
+                    partResults.Add(ExecutePart(id, PuzzlePart.PartOne, input, puzzle.SolvePartOne));
+                    partResults.Add(ExecutePart(id, PuzzlePart.PartTwo, input, puzzle.SolvePartTwo));
                     break;
-            }
-
-            foreach (var result in partResults)
-            {
-                _logger.PuzzlePartCompleted(id, result.PuzzlePart, result.Duration.TotalMilliseconds);
             }
 
             return new PuzzleRunResult(puzzle.Metadata, inputKind, partResults);
@@ -144,20 +138,17 @@ public sealed class PuzzleExecutionService : IPuzzleExecutionService
     /// <param name="input">
     /// The already loaded puzzle input.
     /// </param>
-    /// <param name="inputKind">
-    /// Specifies whether to load demo or personal input.
-    /// </param>
     /// <param name="solve">
     /// The synchronous method that solves the selected puzzle part.
     /// </param>
     /// <returns>The answer and execution duration for the selected puzzle part.</returns>
-    private PuzzlePartResult ExecutePart(PuzzleId id, PuzzlePart puzzlePart, string input, PuzzleInputKind inputKind, Func<string, string> solve)
+    private PuzzlePartResult ExecutePart(PuzzleId id, PuzzlePart puzzlePart, string input, Func<string, string> solve)
     {
-        _logger.ExecutionStarted(id, puzzlePart, inputKind);
-
         var stopWatch = Stopwatch.StartNew();
         var answer = solve(input);
         stopWatch.Stop();
+
+        _logger.PuzzlePartCompleted(id, puzzlePart, stopWatch.Elapsed.TotalMilliseconds);
 
         return new PuzzlePartResult(puzzlePart, answer, stopWatch.Elapsed);
     }

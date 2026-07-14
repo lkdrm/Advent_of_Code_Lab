@@ -1,55 +1,75 @@
 ## Summary
 
-Describe what was added or changed in this pull request.
+<!-- Briefly explain what changed and why. -->
 
-## Puzzle
+-
 
-- Year:
-- Day:
-- Title:
+## Change type
 
-## Implementation checklist
+<!-- Select all applicable options. -->
 
-- [ ] The puzzle implements `IPuzzle`.
-- [ ] `PuzzleMetadata` is correct.
-- [ ] Part One is implemented.
-- [ ] Part Two is implemented.
-- [ ] Shared logic is extracted where appropriate.
-- [ ] The puzzle is registered through dependency injection.
-- [ ] A demo input is included.
-- [ ] No personal Advent of Code input is committed.
+- [ ] Puzzle implementation
+- [ ] Feature
+- [ ] Bug fix
+- [ ] Refactoring
+- [ ] Documentation
+- [ ] CI or tooling
 
-## Documentation checklist
+## Puzzle details
 
-- [ ] The puzzle class contains XML documentation comments.
-- [ ] `Metadata`, `SolvePartOne`, and `SolvePartTwo` contain XML comments.
-- [ ] Helper methods and nested types contain XML comments.
-- [ ] The test class and test methods contain XML comments.
-- [ ] A step-by-step Markdown guide is included.
+<!-- Complete for puzzle PRs. Use N/A for non-puzzle changes. -->
 
-## Testing checklist
+| Field | Value |
+| --- | --- |
+| Year | |
+| Day | |
+| Title | |
 
-- [ ] Unit tests cover Part One.
-- [ ] Unit tests cover Part Two.
-- [ ] The complete test suite passes locally.
-- [ ] The puzzle works through the CLI.
-- [ ] Demo results are correct.
+### Day class
 
-## Local test results
+- [ ] `DayXX` implements `IPuzzle`
+- [ ] Puzzle metadata contains the correct year, day, and title
+- [ ] Part One is implemented
+- [ ] Part Two is implemented
+- [ ] Input validation follows the project policy
+- [ ] No infrastructure or logging dependencies were added to `DayXX`
+- [ ] XML documentation and meaningful comments were added
+- [ ] Demo input was added
+- [ ] The day guide or related documentation was added or updated
 
-```text
-Paste the dotnet test result here.
-```
+### Unit tests
 
-## Demo results
+- [ ] `DayXXTests` was added or updated
+- [ ] Part One examples are covered
+- [ ] Part Two examples are covered
+- [ ] Null, empty, and whitespace input cases are covered
+- [ ] Test names describe the scenario and expected result
+- [ ] Test names do not contain underscores
+- [ ] All puzzle tests pass locally
 
-```text
-Part One:
-Part Two:
-```
+## Global checklist
 
-## Before merge
+<!-- Complete for every pull request. -->
 
-- [ ] The required `Build and test` CI check has passed.
-- [ ] The pull request has no unresolved problems.
-- [ ] The branch is up to date with `main`.
+- [ ] The pull request contains only related changes
+- [ ] The changes follow the project naming and style conventions
+- [ ] Required XML documentation and comments were added or updated
+- [ ] Documentation was updated, or no documentation change is required
+- [ ] No personal puzzle inputs, secrets, logs, or generated files were committed
+- [ ] I reviewed the complete diff before opening the pull request
+
+## Automated change summary
+
+<!-- change-summary:start -->
+
+⏳ Waiting for GitHub Actions to generate the change summary.
+
+<!-- change-summary:end -->
+
+## Automated CI verification
+
+<!-- ci-results:start -->
+
+⏳ Waiting for GitHub Actions to complete the build and tests.
+
+<!-- ci-results:end -->

@@ -95,9 +95,9 @@ public static class MainConsoleMenu
             {
                 ShowError($"Input file could not be read. {ex.Message}");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ShowError($"An unexpected error occurred. Check the Logs directory for details.{ex.Message}");
+                ShowError("An unexpected error occurred. Check the Logs directory for details.");
             }
 
             if (!cancellationTokenSource.IsCancellationRequested)
