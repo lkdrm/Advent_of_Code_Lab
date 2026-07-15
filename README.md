@@ -8,6 +8,8 @@
 A modern .NET learning platform for solving, running, testing, and documenting [Advent of Code](https://adventofcode.com/) puzzles.
 
 This repository focuses not only on finding the correct answers, but also on writing maintainable C# code with clear architecture, dependency injection, automated tests, documentation, and continuous integration.
+> [!TIP]
+> Explore the complete [Advent of Code Lab Wiki](https://github.com/lkdrm/Advent_of_Code_Lab/wiki) for architecture guides, development workflows, testing strategy, troubleshooting, C# deep dives, and puzzle algorithm notes.
 
 ## About the project
 
@@ -44,6 +46,7 @@ Each puzzle day is developed incrementally and treated as a complete feature.
 - Structured puzzle-execution logging
 - Daily rolling JSON diagnostic logs
 - User-friendly CLI error handling
+- Comprehensive GitHub Wiki for architecture, workflows, quality practices, and learning notes
 
 ## Technology stack
 
@@ -357,23 +360,31 @@ Full development rules are available in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Documentation
 
-Every completed puzzle includes a detailed Markdown guide.
+Advent of Code Lab separates documentation by purpose:
 
-The guides explain:
+| Resource | Purpose |
+| --- | --- |
+| [README](README.md) | Project overview, quick start, features, and current roadmap |
+| [Project Wiki](https://github.com/lkdrm/Advent_of_Code_Lab/wiki) | Architecture, execution flow, dependency injection, testing, CI, troubleshooting, and C# deep dives |
+| [Puzzle guides](docs/2015) | Detailed reasoning, algorithms, complexity, tests, and lessons for every completed Day |
+| [CONTRIBUTING](CONTRIBUTING.md) | Branch, implementation, documentation, testing, and pull-request rules |
 
-- the original problem;
+The Wiki explains how the complete laboratory works and why its architectural decisions were made.
+
+Each completed puzzle guide preserves:
+
+- the reduced computational problem;
 - Part One and Part Two requirements;
 - algorithm design;
-- data structure selection;
+- data-structure selection;
 - step-by-step examples;
 - complexity analysis;
 - common mistakes;
-- automated tests;
+- automated-test strategy;
 - application integration;
 - key learning outcomes.
 
 The goal is to preserve not only the final solution, but also the reasoning that led to it.
-
 ## Learning goals
 
 This project is being developed as a practical learning laboratory for modern .NET development.
@@ -403,6 +414,7 @@ Current areas of focus include:
 | ✅ | Continuous integration | GitHub Actions restore, build, and test pipeline |
 | ✅ | Protected workflow | Required pull requests, CI checks, and protected `main` |
 | ✅ | Documentation standards | XML comments, guides, contribution rules, and PR checklist |
+| ✅ | Project Wiki | Architecture, workflows, quality practices, troubleshooting, and learning guides |
 | ✅ | Structured logging | Source-generated events and rolling JSON diagnostic logs |
 | 🚧 | Advent of Code 2015 | `3 / 25` puzzle days completed |
 | 📋 | Additional years | Add support for more Advent of Code events |
