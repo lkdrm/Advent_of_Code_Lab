@@ -17,4 +17,10 @@ internal static partial class PuzzleExecutionLog
 
     [LoggerMessage(EventId = 1003, Level = LogLevel.Error, Message = "Failed puzzle {PuzzleId}, part {PuzzlePart}, using {InputKind} input.")]
     internal static partial void ExecutionFailed(this ILogger<PuzzleExecutionService> logger, PuzzleId puzzleId, PuzzlePart puzzlePart, PuzzleInputKind inputKind, Exception exception);
+
+    [LoggerMessage(EventId = 1004, Level = LogLevel.Information, Message = "Wrote puzzle result for {PuzzleId}, part {PuzzlePart}, using {InputKind} input.")]
+    internal static partial void ResultWriteCompleted(this ILogger<PuzzleExecutionService> logger, PuzzleId puzzleId, PuzzlePart puzzlePart, PuzzleInputKind inputKind);
+
+    [LoggerMessage(EventId = 1005, Level = LogLevel.Warning, Message = "Failed to write puzzle result for {PuzzleId}, part {PuzzlePart}, using {InputKind} input. The calculated answer remains available.")]
+    internal static partial void ResultWriteFailed(this ILogger<PuzzleExecutionService> logger, PuzzleId puzzleId, PuzzlePart puzzlePart, PuzzleInputKind inputKind, Exception exception);
 }

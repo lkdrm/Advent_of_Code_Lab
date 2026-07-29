@@ -62,7 +62,7 @@ public sealed class FilePuzzleInputProvider : IPuzzleInputProvider
         var inputFolderName = inputKind switch
         {
             PuzzleInputKind.Demo => "demo",
-            PuzzleInputKind.Personal => "local"
+            PuzzleInputKind.Personal => "personal"
         };
 
         return Path.Combine(_inputsRootPath, inputFolderName, id.Year.ToString(), $"day{id.Day:D2}.txt");

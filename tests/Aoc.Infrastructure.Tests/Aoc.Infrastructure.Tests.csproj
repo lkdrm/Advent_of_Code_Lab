@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Aoc.Application\Aoc.Application.csproj" />
     <ProjectReference Include="..\..\src\Aoc.Infrastructure\Aoc.Infrastructure.csproj" />
   </ItemGroup>
 

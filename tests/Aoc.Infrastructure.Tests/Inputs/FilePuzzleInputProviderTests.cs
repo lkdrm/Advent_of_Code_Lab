@@ -63,7 +63,7 @@ public sealed class FilePuzzleInputProviderTests : IDisposable
         const string expectedInput = "((())";
 
         var inputPath = CreateInputPath(
-            inputFolderName: "local",
+            inputFolderName: "personal",
             puzzleId: puzzleId);
 
         await File.WriteAllTextAsync(inputPath, expectedInput);
@@ -159,7 +159,7 @@ public sealed class FilePuzzleInputProviderTests : IDisposable
         try
         {
             // Act.
-            var result = InputsRootPathResolver.Resolve(nestedPath);
+            var result = RootPathResolver.Inputs(nestedPath);
 
             // Assert.
             Assert.Equal(expectedPath, result);
@@ -188,7 +188,7 @@ public sealed class FilePuzzleInputProviderTests : IDisposable
         {
             // Act.
             var exception = Assert.Throws<DirectoryNotFoundException>(
-                () => InputsRootPathResolver.Resolve(startPath));
+                () => RootPathResolver.Inputs(startPath));
 
             // Assert.
             Assert.Contains(startPath, exception.Message);
