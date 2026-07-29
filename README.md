@@ -136,6 +136,7 @@ flowchart TD
     CLI --> INFRA["Aoc.Infrastructure"]
     CLI --> YEAR["Aoc.Year2015"]
 
+    INFRA --> APP
     APP --> ABS["Aoc.Abstractions"]
     INFRA --> ABS
     YEAR --> ABS

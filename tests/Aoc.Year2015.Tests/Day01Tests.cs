@@ -83,17 +83,27 @@ public sealed class Day01Tests
     }
 
     /// <summary>
-    /// Verifies that trailing file whitespace does not change
-    /// the first basement position.
+    /// Verifies that trailing file whitespace does not affect
+    /// the calculated Part Two result.
     /// </summary>
-    [Fact]
-    public void SolvePartTwoWhenInputHasTrailingWhitespaceReturnsCorrectPosition()
+    /// <param name="input">
+    /// Puzzle input containing trailing file whitespace.
+    /// </param>
+    /// <param name="expectedResult">
+    /// The expected Part Two result.
+    /// </param>
+    [Theory]
+    [InlineData(")\r\n", "1")]
+    [InlineData("(())\r\n", "0")]
+    public void SolvePartTwoWhenInputHasTrailingWhitespaceReturnsExpectedResult(
+        string input,
+        string expectedResult)
     {
         // Act.
-        var result = _puzzle.SolvePartTwo(")\r\n");
+        var result = _puzzle.SolvePartTwo(input);
 
         // Assert.
-        Assert.Equal("1", result);
+        Assert.Equal(expectedResult, result);
     }
 
     /// <summary>
