@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Aoc.Abstractions\Aoc.Abstractions.csproj" />
+    <ProjectReference Include="..\Aoc.Application\Aoc.Application.csproj" />
   </ItemGroup>
 
 </Project>

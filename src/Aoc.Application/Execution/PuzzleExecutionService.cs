@@ -1,5 +1,6 @@
 ﻿using Aoc.Abstractions.Inputs;
 using Aoc.Abstractions.Puzzles;
+using Aoc.Application.Results;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
@@ -21,6 +22,7 @@ public sealed class PuzzleExecutionService : IPuzzleExecutionService
     private readonly IReadOnlyDictionary<PuzzleId, IPuzzle> _puzzles;
     private readonly IPuzzleInputProvider _inputProvider;
     private readonly ILogger<PuzzleExecutionService> _logger;
+    private readonly IPuzzleResultWriter _resultWriter;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PuzzleExecutionService"/> class.
@@ -34,16 +36,20 @@ public sealed class PuzzleExecutionService : IPuzzleExecutionService
     /// <param name="logger">
     /// The logger used to record puzzle-execution events.
     /// </param>
+    /// <param name="resultWriter">
+    /// The writer used to persist completed puzzle execution results.
+    /// </param>
     /// <exception cref="ArgumentException">
     /// Thrown when <paramref name="puzzles"/> is empty,
     /// contains a <see langword="null"/> entry,
     /// or contains duplicate puzzle identifiers.
     /// </exception>
-    public PuzzleExecutionService(IEnumerable<IPuzzle> puzzles, IPuzzleInputProvider inputProvider, ILogger<PuzzleExecutionService> logger)
+    public PuzzleExecutionService(IEnumerable<IPuzzle> puzzles, IPuzzleInputProvider inputProvider, ILogger<PuzzleExecutionService> logger, IPuzzleResultWriter resultWriter)
     {
         ArgumentNullException.ThrowIfNull(puzzles);
         ArgumentNullException.ThrowIfNull(inputProvider);
         ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(resultWriter);
 
         var puzzleDictionary = new Dictionary<PuzzleId, IPuzzle>();
 
@@ -68,6 +74,7 @@ public sealed class PuzzleExecutionService : IPuzzleExecutionService
         _puzzles = puzzleDictionary;
         _inputProvider = inputProvider;
         _logger = logger;
+        _resultWriter = resultWriter;
     }
 
     /// <inheritdoc />
@@ -112,7 +119,11 @@ public sealed class PuzzleExecutionService : IPuzzleExecutionService
                     break;
             }
 
-            return new PuzzleRunResult(puzzle.Metadata, inputKind, partResults);
+            var result = new PuzzleRunResult(puzzle.Metadata, inputKind, partResults);
+
+            await WriteResultAsync(result, puzzlePart, cancellationToken);
+
+            return result;
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -151,5 +162,38 @@ public sealed class PuzzleExecutionService : IPuzzleExecutionService
         _logger.PuzzlePartCompleted(id, puzzlePart, stopWatch.Elapsed.TotalMilliseconds);
 
         return new PuzzlePartResult(puzzlePart, answer, stopWatch.Elapsed);
+    }
+
+    /// <summary>
+    /// Persists a completed puzzle result without allowing a storage failure
+    /// to hide the successfully calculated answer.
+    /// </summary>
+    /// <param name="puzzleRunResult">
+    /// The complete structured puzzle result to persist.
+    /// </param>
+    /// <param name="puzzlePart">
+    /// The puzzle part originally requested by the caller.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// Allows the write operation to be cancelled.
+    /// </param>
+    /// <returns>
+    /// A task representing the asynchronous write attempt.
+    /// </returns>
+    private async Task WriteResultAsync(PuzzleRunResult puzzleRunResult, PuzzlePart puzzlePart, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _resultWriter.WriteAsync(puzzleRunResult, cancellationToken);
+            _logger.ResultWriteCompleted(puzzleRunResult.PuzzleMetadata.Id, puzzlePart, puzzleRunResult.PuzzleInputKind);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.ResultWriteFailed(puzzleRunResult.PuzzleMetadata.Id, puzzlePart, puzzleRunResult.PuzzleInputKind, ex);
+        }
     }
 }

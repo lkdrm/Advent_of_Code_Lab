@@ -34,7 +34,8 @@ public sealed class PuzzleExecutionServiceTests
         var service = new PuzzleExecutionService(
             puzzles: [puzzle],
             inputProvider: inputProvider,
-            logger: NullLogger<PuzzleExecutionService>.Instance);
+            logger: NullLogger<PuzzleExecutionService>.Instance,
+            resultWriter: new FakePuzzleResultWriter());
 
         // Act.
         var result = await service.ExecuteAsync(
@@ -87,7 +88,8 @@ public sealed class PuzzleExecutionServiceTests
         var service = new PuzzleExecutionService(
             puzzles: [puzzle],
             inputProvider: inputProvider,
-            logger: NullLogger<PuzzleExecutionService>.Instance);
+            logger: NullLogger<PuzzleExecutionService>.Instance,
+            resultWriter: new FakePuzzleResultWriter());
 
         // Act.
         var result = await service.ExecuteAsync(
@@ -139,7 +141,8 @@ public sealed class PuzzleExecutionServiceTests
         var service = new PuzzleExecutionService(
             puzzles: [puzzle],
             inputProvider: inputProvider,
-            logger: NullLogger<PuzzleExecutionService>.Instance);
+            logger: NullLogger<PuzzleExecutionService>.Instance,
+            resultWriter: new FakePuzzleResultWriter());
 
         // Act.
         var result = await service.ExecuteAsync(
@@ -197,7 +200,8 @@ public sealed class PuzzleExecutionServiceTests
         var service = new PuzzleExecutionService(
             puzzles: [registeredPuzzle],
             inputProvider: inputProvider,
-            logger: NullLogger<PuzzleExecutionService>.Instance);
+            logger: NullLogger<PuzzleExecutionService>.Instance,
+            resultWriter: new FakePuzzleResultWriter());
 
         // Act.
         var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
@@ -235,7 +239,8 @@ public sealed class PuzzleExecutionServiceTests
         var service = new PuzzleExecutionService(
             puzzles: [puzzle],
             inputProvider: inputProvider,
-            logger: NullLogger<PuzzleExecutionService>.Instance);
+            logger: NullLogger<PuzzleExecutionService>.Instance,
+            resultWriter: new FakePuzzleResultWriter());
 
         // Act.
         var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
@@ -273,7 +278,8 @@ public sealed class PuzzleExecutionServiceTests
         var service = new PuzzleExecutionService(
             puzzles: [puzzle],
             inputProvider: inputProvider,
-            logger: NullLogger<PuzzleExecutionService>.Instance);
+            logger: NullLogger<PuzzleExecutionService>.Instance,
+            resultWriter: new FakePuzzleResultWriter());
 
         // Act.
         var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
@@ -311,7 +317,8 @@ public sealed class PuzzleExecutionServiceTests
         var service = new PuzzleExecutionService(
             puzzles: [puzzle],
             inputProvider: inputProvider,
-            logger: NullLogger<PuzzleExecutionService>.Instance);
+            logger: NullLogger<PuzzleExecutionService>.Instance,
+            resultWriter: new FakePuzzleResultWriter());
 
         using var cancellationTokenSource =
             new CancellationTokenSource();
@@ -351,7 +358,8 @@ public sealed class PuzzleExecutionServiceTests
             () => new PuzzleExecutionService(
                 puzzles: null!,
                 inputProvider: inputProvider,
-                logger: NullLogger<PuzzleExecutionService>.Instance));
+                logger: NullLogger<PuzzleExecutionService>.Instance,
+                resultWriter: new FakePuzzleResultWriter()));
 
         // Assert.
         Assert.Equal("puzzles", exception.ParamName);
@@ -374,7 +382,8 @@ public sealed class PuzzleExecutionServiceTests
             () => new PuzzleExecutionService(
                 puzzles: [puzzle],
                 inputProvider: null!,
-                logger: NullLogger<PuzzleExecutionService>.Instance));
+                logger: NullLogger<PuzzleExecutionService>.Instance,
+                resultWriter: new FakePuzzleResultWriter()));
 
         // Assert.
         Assert.Equal("inputProvider", exception.ParamName);
@@ -395,7 +404,8 @@ public sealed class PuzzleExecutionServiceTests
             () => new PuzzleExecutionService(
                 puzzles: [],
                 inputProvider: inputProvider,
-                logger: NullLogger<PuzzleExecutionService>.Instance));
+                logger: NullLogger<PuzzleExecutionService>.Instance,
+                resultWriter: new FakePuzzleResultWriter()));
 
         // Assert.
         Assert.Equal("puzzles", exception.ParamName);
@@ -416,7 +426,8 @@ public sealed class PuzzleExecutionServiceTests
             () => new PuzzleExecutionService(
                 puzzles: [null!],
                 inputProvider: inputProvider,
-                logger: NullLogger<PuzzleExecutionService>.Instance));
+                logger: NullLogger<PuzzleExecutionService>.Instance,
+                resultWriter: new FakePuzzleResultWriter()));
 
         // Assert.
         Assert.Equal("puzzles", exception.ParamName);
@@ -453,7 +464,8 @@ public sealed class PuzzleExecutionServiceTests
                 secondPuzzle,
                 ],
                 inputProvider: inputProvider,
-                logger: NullLogger<PuzzleExecutionService>.Instance));
+                logger: NullLogger<PuzzleExecutionService>.Instance,
+                resultWriter: new FakePuzzleResultWriter()));
 
         // Assert.
         Assert.Equal("puzzles", exception.ParamName);
@@ -479,9 +491,123 @@ public sealed class PuzzleExecutionServiceTests
             () => new PuzzleExecutionService(
                 puzzles: [puzzle],
                 inputProvider: inputProvider,
-                logger: null!));
+                logger: null!,
+                resultWriter: new FakePuzzleResultWriter()));
 
         // Assert.
         Assert.Equal("logger", exception.ParamName);
+    }
+
+    /// <summary>
+    /// Verifies that a missing puzzle-result writer dependency is rejected.
+    /// </summary>
+    [Fact]
+    public void ConstructorWhenResultWriterIsNullThrowsArgumentNullException()
+    {
+        // Arrange.
+        var puzzle = new FakePuzzle(
+            metadata: new PuzzleMetadata(
+                id: new PuzzleId(2015, 1),
+                title: "Fake Puzzle"));
+
+        var inputProvider = new FakePuzzleInputProvider(
+            input: "demo-input");
+
+        // Act.
+        var exception = Assert.Throws<ArgumentNullException>(
+            () => new PuzzleExecutionService(
+                puzzles: [puzzle],
+                inputProvider: inputProvider,
+                resultWriter: null!,
+                logger: NullLogger<PuzzleExecutionService>.Instance));
+
+        // Assert.
+        Assert.Equal("resultWriter", exception.ParamName);
+    }
+
+    /// <summary>
+    /// Verifies that a successfully completed puzzle run is passed
+    /// to the configured result writer exactly once.
+    /// </summary>
+    [Fact]
+    public async Task ExecuteAsyncWhenPuzzleCompletesWritesStructuredRunResult()
+    {
+        // Arrange.
+        var puzzleId = new PuzzleId(year: 2015, day: 1);
+
+        var puzzle = new FakePuzzle(
+            metadata: new PuzzleMetadata(
+                id: puzzleId,
+                title: "Fake Puzzle"),
+            partOneAnswer: "part-one-answer");
+
+        var inputProvider = new FakePuzzleInputProvider(
+            input: "demo-input");
+
+        var resultWriter = new FakePuzzleResultWriter();
+
+        var service = new PuzzleExecutionService(
+            puzzles: [puzzle],
+            inputProvider: inputProvider,
+            resultWriter: resultWriter,
+            logger: NullLogger<PuzzleExecutionService>.Instance);
+
+        // Act.
+        var result = await service.ExecuteAsync(
+            id: puzzleId,
+            puzzlePart: PuzzlePart.PartOne,
+            inputKind: PuzzleInputKind.Demo,
+            cancellationToken: CancellationToken.None);
+
+        // Assert.
+        Assert.Equal(1, resultWriter.CallCount);
+        Assert.Same(result, resultWriter.WrittenResult);
+        Assert.Equal(
+            CancellationToken.None,
+            resultWriter.ReceivedCancellationToken);
+    }
+
+    /// <summary>
+    /// Verifies that a result-writer failure does not hide
+    /// a successfully calculated puzzle answer.
+    /// </summary>
+    [Fact]
+    public async Task ExecuteAsyncWhenResultWriterFailsReturnsCalculatedResult()
+    {
+        // Arrange.
+        var puzzleId = new PuzzleId(year: 2015, day: 1);
+
+        var puzzle = new FakePuzzle(
+            metadata: new PuzzleMetadata(
+                id: puzzleId,
+                title: "Fake Puzzle"),
+            partOneAnswer: "calculated-answer");
+
+        var inputProvider = new FakePuzzleInputProvider(
+            input: "demo-input");
+
+        var resultWriter = new FakePuzzleResultWriter(
+            exceptionToThrow: new IOException(
+                "Simulated result-write failure."));
+
+        var service = new PuzzleExecutionService(
+            puzzles: [puzzle],
+            inputProvider: inputProvider,
+            resultWriter: resultWriter,
+            logger: NullLogger<PuzzleExecutionService>.Instance);
+
+        // Act.
+        var result = await service.ExecuteAsync(
+            id: puzzleId,
+            puzzlePart: PuzzlePart.PartOne,
+            inputKind: PuzzleInputKind.Demo,
+            cancellationToken: CancellationToken.None);
+
+        // Assert.
+        var partResult = Assert.Single(result.PartResults);
+
+        Assert.Equal("calculated-answer", partResult.Answer);
+        Assert.Equal(1, resultWriter.CallCount);
+        Assert.Same(result, resultWriter.WrittenResult);
     }
 }

@@ -22,7 +22,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Inputs\local\" />
+	  <Folder Include="Inputs\personal\" />
 	</ItemGroup>
 
 </Project>

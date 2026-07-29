@@ -47,6 +47,9 @@ Each puzzle day is developed incrementally and treated as a complete feature.
 - Daily rolling JSON diagnostic logs
 - User-friendly CLI error handling
 - Comprehensive GitHub Wiki for architecture, workflows, quality practices, and learning notes
+- Automatic Markdown export for demo and personal puzzle results
+- Idempotent result updates that preserve previously recorded puzzle parts
+- Safe result-file replacement through temporary files
 
 ## Technology stack
 
@@ -59,7 +62,7 @@ Each puzzle day is developed incrementally and treated as a complete feature.
 | xUnit | Automated testing |
 | Coverlet | Code coverage collection |
 | GitHub Actions | Continuous integration |
-| Markdown | Step-by-step puzzle documentation |
+| Markdown | Puzzle documentation and generated execution results |
 | Microsoft.Extensions.Logging | Application logging abstraction |
 | Serilog | Structured rolling JSON log provider |
 | Scrutor | Assembly scanning and convention-based puzzle registration |
@@ -142,13 +145,13 @@ flowchart TD
 | Project | Responsibility |
 | --- | --- |
 | `Aoc.Abstractions` | Shared contracts, puzzle identifiers, metadata, input types, and result models |
-| `Aoc.Application` | Puzzle lookup, input coordination, execution, and timing |
-| `Aoc.Infrastructure` | File-based loading of demo and personal inputs |
+| `Aoc.Application` | Puzzle lookup, input coordination, execution, timing, and result-persistence orchestration |
+| `Aoc.Infrastructure` | File-based input loading and Markdown result persistence |
 | `Aoc.Year2015` | Advent of Code 2015 puzzle implementations and automatic DI registration through assembly scanning |
 | `Aoc.Cli` | Application startup, interactive menu, and result presentation |
 | `Aoc.Abstractions.Tests` | Tests for identifiers, metadata, and shared contracts |
 | `Aoc.Application.Tests` | Tests for puzzle execution behavior and result models |
-| `Aoc.Infrastructure.Tests` | Tests for file-based input loading |
+| `Aoc.Infrastructure.Tests` | Tests for file-based input loading and Markdown result persistence |
 | `Aoc.Year2015.Tests` | Tests for puzzle algorithms and automatic registration conventions |
 
 ## Execution flow
@@ -192,6 +195,8 @@ Runtime location:
 |     1001 | `PuzzlePartCompleted` | Information | One puzzle part completed successfully |
 |     1002 | `ExecutionCancelled`  | Information | Execution was cancelled                |
 |     1003 | `ExecutionFailed`     | Error       | Execution failed with an exception     |
+|     1004 | `ResultWriteCompleted` | Information | Puzzle results were written successfully |
+|     1005 | `ResultWriteFailed`    | Warning     | Result persistence failed, but the calculated answer remains available |
 
 The logs include puzzle identifiers, selected parts, input kinds, execution
 durations, and diagnostic exception details.
@@ -263,10 +268,55 @@ Personal Advent of Code inputs must remain local and must not be committed.
 Expected runtime location:
 
 ```text
-Inputs/local/2015/day03.txt
+Inputs/personal/2015/day03.txt
 ```
 
 The local input directory is excluded through `.gitignore`.
+
+## Generated puzzle results
+
+After a puzzle completes successfully, the application automatically stores its answers as a Markdown report.
+
+Runtime location:
+
+```text
+<Aoc.Cli output>/Results/
+├── demo/
+│   └── 2015/
+│       └── day03.md
+└── personal/
+    └── 2015/
+        └── day03.md
+```
+
+demo and personal results are stored separately. Each user receives an independent `Results` directory next to the built or published application.
+
+Example report:
+
+```markdown
+# Advent of Code 2015
+
+## Day 03: Perfectly Spherical Houses in a Vacuum
+
+**Input:** Demo
+
+| Part | Result |
+| --- | --- |
+| Part One <!-- result:part-one --> | `4` |
+| Part Two <!-- result:part-two --> | `3` |
+```
+
+The result writer:
+
+- preserves an existing Part One result when Part Two is executed later;
+- does not create duplicate sections or rows;
+- skips the file write when the generated content has not changed;
+- writes through a temporary file before replacing the destination;
+- removes temporary files after failures or cancellation;
+- never stores puzzle input, execution duration, or diagnostic details;
+- keeps an already calculated answer available when result persistence fails.
+
+Generated files remain local because the application output directories are excluded from Git.
 
 ## Running tests
 
@@ -416,6 +466,7 @@ Current areas of focus include:
 | ✅ | Documentation standards | XML comments, guides, contribution rules, and PR checklist |
 | ✅ | Project Wiki | Architecture, workflows, quality practices, troubleshooting, and learning guides |
 | ✅ | Structured logging | Source-generated events and rolling JSON diagnostic logs |
+| ✅ | Markdown result export | Safe, idempotent reports for demo and personal puzzle executions |
 | 🚧 | Advent of Code 2015 | `3 / 25` puzzle days completed |
 | 📋 | Additional years | Add support for more Advent of Code events |
 | 📋 | Code coverage | Generate and publish coverage reports |

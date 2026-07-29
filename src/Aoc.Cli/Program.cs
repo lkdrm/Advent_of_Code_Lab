@@ -2,8 +2,10 @@
 using Aoc.Abstractions.Puzzles;
 using Aoc.Application;
 using Aoc.Application.Execution;
+using Aoc.Application.Results;
 using Aoc.Cli;
 using Aoc.Infrastructure.Inputs;
+using Aoc.Infrastructure.Results;
 using Aoc.Year2015;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -18,7 +20,8 @@ Console.CancelKeyPress += (_, eventArgs) =>
     cts.Cancel();
 };
 
-var inputsRootPath = InputsRootPathResolver.Resolve(AppContext.BaseDirectory);
+var inputsRootPath = RootPathResolver.Inputs(AppContext.BaseDirectory);
+var resultsRootPath = RootPathResolver.Results(AppContext.BaseDirectory);
 var logsRootPath = Path.Combine(AppContext.BaseDirectory, "Logs");
 
 Directory.CreateDirectory(logsRootPath);
@@ -37,6 +40,7 @@ using var diagnosticLogger = new LoggerConfiguration()
 
 var services = new ServiceCollection();
 services.AddSingleton<IPuzzleInputProvider>(_ => new FilePuzzleInputProvider(inputsRootPath));
+services.AddSingleton<IPuzzleResultWriter>(_ => new MarkdownPuzzleResultWriter(resultsRootPath));
 services.AddYear2015Puzzles();
 services.AddApplication();
 services.AddLogging(logging =>
