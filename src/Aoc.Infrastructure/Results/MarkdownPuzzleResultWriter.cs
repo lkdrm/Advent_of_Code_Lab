@@ -16,6 +16,21 @@ public sealed class MarkdownPuzzleResultWriter : IPuzzleResultWriter
 {
     private readonly string _resultRootPath;
 
+    /// <summary>
+    /// Initializes a new instance of the
+    /// <see cref="MarkdownPuzzleResultWriter"/> class.
+    /// </summary>
+    /// <param name="resultsRootPath">
+    /// The root directory in which generated puzzle results are stored.
+    /// </param>
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="resultsRootPath"/> is empty
+    /// or contains only whitespace.
+    /// </exception>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="resultsRootPath"/> is
+    /// <see langword="null"/>.
+    /// </exception>
     public MarkdownPuzzleResultWriter(string resultsRootPath)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(resultsRootPath, nameof(resultsRootPath));
@@ -42,20 +57,20 @@ public sealed class MarkdownPuzzleResultWriter : IPuzzleResultWriter
             existingMarkdown = await File.ReadAllTextAsync(resultFilePath, cancellationToken);
         }
 
-        var updateMarkdown = existingMarkdown is null ? BuildMarkdown(result) : MergeMarkdown(existingMarkdown, result);
+        var updatedMarkdown = existingMarkdown is null ? BuildMarkdown(result) : MergeMarkdown(existingMarkdown, result);
 
-        if (string.Equals(existingMarkdown, updateMarkdown, StringComparison.Ordinal))
+        if (string.Equals(existingMarkdown, updatedMarkdown, StringComparison.Ordinal))
         {
             return;
         }
 
-        await WriteFileSafetyAsync(resultFilePath, updateMarkdown, cancellationToken);
+        await WriteFileSafelyAsync(resultFilePath, updatedMarkdown, cancellationToken);
     }
 
     /// <summary>
     /// Writes content through a temporary file and then replaces the destination file to avoid leaving partial Markdown content.
     /// </summary>
-    private static async Task WriteFileSafetyAsync(string filePath, string markdownResult, CancellationToken cancellationToken)
+    private static async Task WriteFileSafelyAsync(string filePath, string markdownResult, CancellationToken cancellationToken)
     {
         var tempFilePath = $"{filePath}.{Guid.NewGuid():N}.tmp";
 

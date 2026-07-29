@@ -74,11 +74,9 @@ public sealed class Day03Tests
     [Fact]
     public void SolvePartTwoWhenInputIsNullThrowsArgumentNullException()
     {
-        var puzzle = new Day02();
-
         // Act.
         var exception = Assert.Throws<ArgumentNullException>(
-            () => puzzle.SolvePartTwo(null!));
+            () => _puzzle.SolvePartTwo(null!));
 
         // Assert.
         Assert.Equal("input", exception.ParamName);

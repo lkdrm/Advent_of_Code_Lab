@@ -23,9 +23,9 @@ public sealed record PuzzleRunResult
     public PuzzleInputKind PuzzleInputKind { get; }
 
     /// <summary>
-    /// Gets results for the executed puzzle parts.
+    /// Gets the ordered read-only results of the executed puzzle parts.
     /// </summary>
-    public IEnumerable<PuzzlePartResult> PartResults { get; }
+    public IReadOnlyList<PuzzlePartResult> PartResults { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PuzzleRunResult"/> class.
@@ -36,9 +36,9 @@ public sealed record PuzzleRunResult
     /// <param name="inputKind">
     /// Specifies whether the puzzle was run with demo or personal input.
     /// </param>
-    /// <summary>
-    /// Gets the ordered read-only results of the executed puzzle parts.
-    /// </summary>
+    /// <param name="partResults">
+    /// The ordered read-only results of the executed puzzle parts.
+    /// </param>
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="puzzleMetadata"/> or
     /// <paramref name="partResults"/> is <see langword="null"/>.
