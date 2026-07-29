@@ -43,11 +43,13 @@ public sealed class Day01 : IPuzzle
     public string SolvePartTwo(string input)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(input);
+
+        var directions = input.Trim();
         var floor = 0;
 
-        for (var index = 0; index < input.Length; index++)
+        for (var index = 0; index < directions.Length; index++)
         {
-            floor += GetFloorChange(input.Trim()[index]);
+            floor += GetFloorChange(directions[index]);
 
             if (floor == -1)
             {
