@@ -9,7 +9,7 @@ A modern .NET learning platform for solving, running, testing, and documenting [
 
 This repository focuses not only on finding the correct answers, but also on writing maintainable C# code with clear architecture, dependency injection, automated tests, documentation, and continuous integration.
 > [!TIP]
-> Explore the complete [Advent of Code Lab Wiki](https://github.com/lkdrm/Advent_of_Code_Lab/wiki) for architecture guides, development workflows, testing strategy, troubleshooting, C# deep dives, and puzzle algorithm notes.
+> Start with the version-controlled [Architecture documentation](docs/architecture/README.md) for Mermaid diagrams synchronized with the source code. Use the complete [Advent of Code Lab Wiki](https://github.com/lkdrm/Advent_of_Code_Lab/wiki) for extended explanations, development workflows, testing strategy, troubleshooting, C# deep dives, and puzzle algorithm notes.
 
 ## About the project
 
@@ -43,6 +43,7 @@ Each puzzle day is developed incrementally and treated as a complete feature.
 - Protected `main` branch with required CI checks
 - XML documentation comments
 - Detailed Markdown guides for every completed puzzle
+- Version-controlled Mermaid diagrams for architecture, runtime flows, extensibility, and CI
 - Structured puzzle-execution logging
 - Daily rolling JSON diagnostic logs
 - User-friendly CLI error handling
@@ -142,6 +143,8 @@ flowchart TD
     YEAR --> ABS
 ```
 
+See the [Solution architecture](docs/architecture/solution-architecture.md) diagram for the complete layer, dependency, and automated-test view. The full diagram index is available in [Architecture documentation](docs/architecture/README.md).
+
 ### Project responsibilities
 
 | Project | Responsibility |
@@ -176,6 +179,8 @@ automatically as a singleton.
 
 The CLI receives all discovered `IPuzzle` implementations and displays them
 without requiring changes to its startup code.
+
+Follow the complete runtime sequence in [Complete startup and puzzle execution flow](docs/architecture/complete-startup-and-puzzle-execution-flow.md).
 
 ## Diagnostic logging
 
@@ -222,10 +227,17 @@ Advent_of_Code_Lab/
 │   └── pull_request_template.md
 │
 ├── docs/
+│   ├── architecture/
+│   │   ├── README.md
+│   │   ├── solution-architecture.md
+│   │   ├── complete-startup-and-puzzle-execution-flow.md
+│   │   ├── input-and-result-file-flow.md
+│   │   ├── puzzle-extension-flow.md
+│   │   └── github-CI-flow.md
 │   └── 2015/
 │       ├── day01-not-quite-lisp.md
 │       ├── day02-i-was-told-there-would-be-no-math.md
-│       └── day03-perfectly-spherical-houses-in-a-vacuum.md
+│       ├── day03-perfectly-spherical-houses-in-a-vacuum.md
 │       └── day04-the-ideal-stocking-stuffer.md
 │
 ├── src/
@@ -321,6 +333,8 @@ The result writer:
 
 Generated files remain local because the application output directories are excluded from Git.
 
+See [Input and result file flow](docs/architecture/input-and-result-file-flow.md) for the complete loading, execution, merge, and safe-write sequence.
+
 ## Running tests
 
 Run the complete test suite:
@@ -390,6 +404,8 @@ Only content between the generated-section markers is replaced. Manually written
 
 Pull requests from forks still run build and tests, but the description updater is skipped to keep the workflow token read-only.
 
+See [GitHub CI flow](docs/architecture/github-CI-flow.md) for the complete validation and pull-request reporting sequence.
+
 ## Adding a new puzzle
 
 Every new puzzle day follows the same workflow:
@@ -411,6 +427,8 @@ Every new puzzle day follows the same workflow:
 
 Full development rules are available in [CONTRIBUTING.md](CONTRIBUTING.md).
 
+See [Puzzle extension flow](docs/architecture/puzzle-extension-flow.md) for the visual path from a new `DayXX` class to automatic discovery in the CLI.
+
 ## Documentation
 
 Advent of Code Lab separates documentation by purpose:
@@ -418,11 +436,12 @@ Advent of Code Lab separates documentation by purpose:
 | Resource | Purpose |
 | --- | --- |
 | [README](README.md) | Project overview, quick start, features, and current roadmap |
-| [Project Wiki](https://github.com/lkdrm/Advent_of_Code_Lab/wiki) | Architecture, execution flow, dependency injection, testing, CI, troubleshooting, and C# deep dives |
+| [Architecture documentation](docs/architecture/README.md) | Version-controlled Mermaid diagrams for solution dependencies, startup, execution, persistence, extensibility, and CI |
+| [Project Wiki](https://github.com/lkdrm/Advent_of_Code_Lab/wiki) | Extended architecture explanations, development workflows, testing strategy, troubleshooting, C# deep dives, and algorithm notes |
 | [Puzzle guides](docs/2015) | Detailed reasoning, algorithms, complexity, tests, and lessons for every completed Day |
 | [CONTRIBUTING](CONTRIBUTING.md) | Branch, implementation, documentation, testing, and pull-request rules |
 
-The Wiki explains how the complete laboratory works and why its architectural decisions were made.
+The architecture directory keeps diagrams close to the versioned code. The Wiki explains why the laboratory is designed this way and provides longer operational and learning guides.
 
 Each completed puzzle guide preserves:
 
