@@ -124,6 +124,7 @@ After execution, the CLI displays the answer and execution time for every select
 | 02 | [I Was Told There Would Be No Math](https://adventofcode.com/2015/day/2) | Input parsing, record structs, geometry calculations, aggregation | [Read guide](docs/2015/day02-i-was-told-there-would-be-no-math.md) |
 | 03 | [Perfectly Spherical Houses in a Vacuum](https://adventofcode.com/2015/day/3) | Coordinate systems, tuples, HashSet, alternating turns | [Read guide](docs/2015/day03-perfectly-spherical-houses-in-a-vacuum.md) |
 | 04 | [The Ideal Stocking Stuffer](https://adventofcode.com/2015/day/4) | MD5 hashing, brute force, bit masks, Span, stackalloc, allocation reduction | [Read guide](docs/2015/day04-the-ideal-stocking-stuffer.md) |
+| 05 | [Doesn't He Have Intern-Elves For This?](https://adventofcode.com/2015/day/5) | String scanning, predicate composition, non-overlapping pairs, ordinal search | [Read guide](docs/2015/day05-doesnt-he-have-intern-elves-for-this.md) |
 
 More puzzle days will be added incrementally.
 
@@ -238,7 +239,8 @@ Advent_of_Code_Lab/
 │       ├── day01-not-quite-lisp.md
 │       ├── day02-i-was-told-there-would-be-no-math.md
 │       ├── day03-perfectly-spherical-houses-in-a-vacuum.md
-│       └── day04-the-ideal-stocking-stuffer.md
+│       ├── day04-the-ideal-stocking-stuffer.md
+│       └── day05-doesnt-he-have-intern-elves-for-this.md
 │
 ├── src/
 │   ├── Aoc.Abstractions/
@@ -352,7 +354,7 @@ dotnet test tests/Aoc.Year2015.Tests/Aoc.Year2015.Tests.csproj
 Run tests for one puzzle day:
 
 ```bash
-dotnet test --filter "FullyQualifiedName~Day03Tests"
+dotnet test --filter "FullyQualifiedName~Day05Tests"
 ```
 
 The test suite covers different areas:
@@ -476,7 +478,7 @@ Current areas of focus include:
 
 ## Roadmap
 
-![Advent of Code 2015 progress](https://img.shields.io/badge/Advent%20of%20Code%202015-4%20%2F%2025-2ea44f)
+![Advent of Code 2015 progress](https://img.shields.io/badge/Advent%20of%20Code%202015-5%20%2F%2025-2ea44f)
 
 | Status | Milestone | Details |
 | :---: | --- | --- |
@@ -489,7 +491,7 @@ Current areas of focus include:
 | ✅ | Project Wiki | Architecture, workflows, quality practices, troubleshooting, and learning guides |
 | ✅ | Structured logging | Source-generated events and rolling JSON diagnostic logs |
 | ✅ | Markdown result export | Safe, idempotent reports for demo and personal puzzle executions |
-| 🚧 | Advent of Code 2015 | `4 / 25` puzzle days completed |
+| 🚧 | Advent of Code 2015 | `5 / 25` puzzle days completed |
 | 📋 | Additional years | Add support for more Advent of Code events |
 | 📋 | Code coverage | Generate and publish coverage reports |
 
