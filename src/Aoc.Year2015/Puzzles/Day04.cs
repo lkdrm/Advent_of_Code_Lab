@@ -14,7 +14,7 @@ namespace Aoc.Year2015.Puzzles;
 /// when appended to a secret key, produces an MD5 hash
 /// with the required hexadecimal prefix.
 /// </remarks>
-public class Day04 : IPuzzle
+public sealed class Day04 : IPuzzle
 {
     public PuzzleMetadata Metadata => new(
         id: new(2015, 4),
